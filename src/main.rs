@@ -69,6 +69,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
 
     let mut context = Context::new(window, input);
 
+    let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
     let mut state = GameState::new();
@@ -78,7 +79,10 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
             // Normally we'd do some processing here
         }
 
-        state.update(&mut context);
+        // We use a while loop rather than an if so that we can try to catch up in the event of having a slow down.
+        while update_timer.tick() {
+            state.update(&mut context);
+        }
 
         if draw_timer.exhaust().is_some() {
             state.render(&mut context, &mut gfx)?;
