@@ -3,11 +3,10 @@ mod state;
 mod game_state;
 
 use quicksilver::{
-    geom::{Rectangle, Vector},
-    graphics::Color,
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
+use crate::state::State;
 use crate::context::Context;
 use crate::game_state::GameState;
 
@@ -21,7 +20,7 @@ fn main() {
     );
 }
 
-async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
+async fn app(window: Window, mut gfx: Graphics, input: Input) -> Result<()> {
    let window_size = window.size();
 
     println!("Window Size: {:?}", window_size);  // Default: 1024.0 x 768.0

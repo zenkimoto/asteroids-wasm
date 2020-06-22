@@ -1,9 +1,10 @@
 use quicksilver::{
     geom::{Rectangle, Vector},
     graphics::Color,
-    run, Graphics, Input, Result, Settings, Timer, Window,
+    Graphics, Result,
 };
 use crate::context::Context;
+use crate::state::State;
 
 pub struct GameState {
 
@@ -13,12 +14,14 @@ impl GameState {
     pub fn new() -> Self {
         Self { }
     }
+}
 
-    pub fn update(&mut self, ctx: &mut Context) {
+impl State for GameState {
+    fn update(&mut self, _ctx: &mut Context) {
 
     }
 
-    pub fn render(&mut self, ctx: &mut Context, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, _ctx: &mut Context, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a blank, white color
         gfx.clear(Color::WHITE);
         // Paint a blue square with a red outline in the center of our screen

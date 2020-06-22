@@ -1,7 +1,5 @@
 use quicksilver::{
-    geom::{Rectangle, Vector},
-    graphics::Color,
-    run, Graphics, Input, Result, Settings, Timer, Window,
+    Input, Window,
 };
 
 pub struct Context {

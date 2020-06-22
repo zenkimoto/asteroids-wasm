@@ -1,7 +1,5 @@
 use quicksilver::{
-    geom::{Rectangle, Vector},
-    graphics::Color,
-    run, Graphics, Input, Result, Settings, Timer, Window,
+    Graphics, Result,
 };
 use crate::context::Context;
 
