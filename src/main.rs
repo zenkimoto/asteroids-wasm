@@ -19,8 +19,8 @@ impl Context {
 }
 
 trait State {
-    fn update(&self, ctx: &mut Context);
-    fn render(&self, ctx: &mut Context, gfx: &mut Graphics) -> Result<()>;
+    fn update(&mut self, ctx: &mut Context);
+    fn render(&mut self, ctx: &mut Context, gfx: &mut Graphics) -> Result<()>;
 }
 
 struct GameState {
@@ -34,11 +34,11 @@ impl GameState {
 }
 
 impl State for GameState {
-    fn update(&self, ctx: &mut Context) {
+    fn update(&mut self, ctx: &mut Context) {
    
     }
 
-    fn render(&self, ctx: &mut Context, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, ctx: &mut Context, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a blank, white color
         gfx.clear(Color::WHITE);
         // Paint a blue square with a red outline in the center of our screen
@@ -79,7 +79,6 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
         state.update(&mut context);
         state.render(&mut context, &mut gfx)?;
 
-        // Send the data to be drawn
         gfx.present(&context.window)?;
 
         // And then we'd do updates and drawing here
