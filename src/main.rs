@@ -1,7 +1,7 @@
 use quicksilver::{
     geom::{Rectangle, Vector},
     graphics::Color,
-    run, Graphics, Input, Result, Settings, Window,
+    run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
 pub struct Context {
@@ -69,6 +69,8 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
 
     let mut context = Context::new(window, input);
 
+    let mut draw_timer = Timer::time_per_second(60.0);
+
     let mut state = GameState::new();
 
     loop {
@@ -77,9 +79,11 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
         }
 
         state.update(&mut context);
-        state.render(&mut context, &mut gfx)?;
 
-        gfx.present(&context.window)?;
+        if draw_timer.exhaust().is_some() {
+            state.render(&mut context, &mut gfx)?;
+            gfx.present(&context.window)?;
+        }
 
         // And then we'd do updates and drawing here
         // When this loop ends, the window will close and the application will stop
