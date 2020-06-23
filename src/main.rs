@@ -3,6 +3,7 @@ mod state;
 mod game_state;
 
 use quicksilver::{
+    input::Event,
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
@@ -34,8 +35,12 @@ async fn app(window: Window, mut gfx: Graphics, input: Input) -> Result<()> {
 
     loop {
         while let Some(e) = context.input.next_event().await {
-            println!("{:?}", e);
-        }
+            match e {
+                Event::KeyboardInput(key) if key.is_down() => state.key_down(key.key()),
+                Event::KeyboardInput(key) if key.is_down() == false => state.key_up(key.key()),
+                _ => { }
+            }
+         }
 
         // We use a while loop rather than an if so that we can try to catch up in the event of having a slow down.
         while update_timer.tick() {
@@ -46,9 +51,5 @@ async fn app(window: Window, mut gfx: Graphics, input: Input) -> Result<()> {
             state.render(&mut context, &mut gfx)?;
             gfx.present(&context.window)?;
         }
-
-        // And then we'd do updates and drawing here
-        // When this loop ends, the window will close and the application will stop
-        // If the window is closed, our application will receive a close event and terminate also
     }
 }

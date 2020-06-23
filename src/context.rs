@@ -11,7 +11,7 @@ impl Context {
     pub fn new(window: Window, input: Input) -> Self {
         Self {
             window,
-            input
+            input,
         }
     }
 }
