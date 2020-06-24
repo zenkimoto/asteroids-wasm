@@ -6,7 +6,7 @@ use quicksilver::{
 
 pub trait State {
     fn update(&mut self, input: &mut Input);
-    fn render(&mut self, input: &mut Input, gfx: &mut Graphics) -> Result<()>;
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()>;
 
     fn key_down(&mut self, key: Key) {
         println!("Key Down: {:?}", key);

@@ -26,7 +26,7 @@ impl State for GameState {
 
     }
 
-    fn render(&mut self, _input: &mut Input, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a blank, white color
         gfx.clear(Color::WHITE);
         // Paint a blue square with a red outline in the center of our screen

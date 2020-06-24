@@ -44,7 +44,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
         }
 
         if draw_timer.exhaust().is_some() {
-            state.render(&mut input, &mut gfx)?;
+            state.render(&mut gfx)?;
             gfx.present(&window)?;
         }
     }
