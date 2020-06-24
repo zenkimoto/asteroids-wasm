@@ -2,29 +2,31 @@ use quicksilver::{
     geom::{Rectangle, Vector},
     input::Key,
     graphics::Color,
-    Graphics, Result,
+    Graphics, Input, Result,
 };
-use crate::context::Context;
+// use crate::context::Context;
 use crate::state::State;
 
 pub struct GameState {
     location: Vector,
+    window_size: Vector,
 }
 
 impl GameState {
-    pub fn new() -> Self {
+    pub fn new(window_size: &Vector) -> Self {
         Self {
             location: Vector::new(350.0, 100.0),
+            window_size: window_size.clone(),
         }
     }
 }
 
 impl State for GameState {
-    fn update(&mut self, _ctx: &mut Context) {
+    fn update(&mut self, _input: &mut Input) {
 
     }
 
-    fn render(&mut self, _ctx: &mut Context, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, _input: &mut Input, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a blank, white color
         gfx.clear(Color::WHITE);
         // Paint a blue square with a red outline in the center of our screen

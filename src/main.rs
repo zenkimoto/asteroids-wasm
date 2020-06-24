@@ -1,4 +1,3 @@
-mod context;
 mod state;
 mod game_state;
 
@@ -8,7 +7,6 @@ use quicksilver::{
 };
 
 use crate::state::State;
-use crate::context::Context;
 use crate::game_state::GameState;
 
 fn main() {
@@ -21,20 +19,18 @@ fn main() {
     );
 }
 
-async fn app(window: Window, mut gfx: Graphics, input: Input) -> Result<()> {
+async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
    let window_size = window.size();
 
     println!("Window Size: {:?}", window_size);  // Default: 1024.0 x 768.0
 
-    let mut context = Context::new(window, input);
-
     let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
-    let mut state = GameState::new();
+    let mut state = GameState::new(&window_size);
 
     loop {
-        while let Some(e) = context.input.next_event().await {
+        while let Some(e) = input.next_event().await {
             match e {
                 Event::KeyboardInput(key) if key.is_down() => state.key_down(key.key()),
                 Event::KeyboardInput(key) if key.is_down() == false => state.key_up(key.key()),
@@ -44,12 +40,12 @@ async fn app(window: Window, mut gfx: Graphics, input: Input) -> Result<()> {
 
         // We use a while loop rather than an if so that we can try to catch up in the event of having a slow down.
         while update_timer.tick() {
-            state.update(&mut context);
+            state.update(&mut input);
         }
 
         if draw_timer.exhaust().is_some() {
-            state.render(&mut context, &mut gfx)?;
-            gfx.present(&context.window)?;
+            state.render(&mut input, &mut gfx)?;
+            gfx.present(&window)?;
         }
     }
 }
