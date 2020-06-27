@@ -35,19 +35,29 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
     let mut states = initialize_game_states(&window_size);
 
     loop {
-        if let Some(state_type) = states.last_mut() {
-            let state = match state_type {
-                StateType::InitialState(state) => state,
-            };
+        let state = get_current_game_state(&mut states);
 
-            handle_input_events(&mut input, state).await;
+        handle_input_events(&mut input, state).await;
 
-            update_game_state(&mut update_timer, &mut input, state);
+        update_game_state(&mut update_timer, &mut input, state);
 
-            render_game_state(&mut draw_timer, &window, &mut gfx, state)?;
-        } else {
-            panic!("No states in state stack!");
-        }
+        render_game_state(&mut draw_timer, &window, &mut gfx, state)?;
+    }
+}
+
+fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
+    debug_assert!(states.len() > 0);
+
+    if let Some(state_type) = states.last_mut() {
+        let state = match state_type {
+            StateType::InitialState(state) => state,
+        };
+
+        state
+    } else {
+        // This should not happen.  There should always be at least
+        // one state in the stack so the game knows what to render.
+        panic!("No states in state stack!");
     }
 }
 
