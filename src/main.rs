@@ -49,11 +49,9 @@ fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
     debug_assert!(states.len() > 0);
 
     if let Some(state_type) = states.last_mut() {
-        let state = match state_type {
+        match state_type {
             StateType::InitialState(state) => state,
-        };
-
-        state
+        }
     } else {
         // This should not happen.  There should always be at least
         // one state in the stack so the game knows what to render.
