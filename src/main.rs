@@ -48,14 +48,13 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
 fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
     debug_assert!(states.len() > 0);
 
-    if let Some(state_type) = states.last_mut() {
-        match state_type {
-            StateType::InitialState(state) => state,
+    match states.last_mut() {
+        Some(StateType::InitialState(state)) => state,
+        _ => {
+            // This should not happen.  There should always be at least
+            // one state in the stack so the game knows what to render.
+            panic!("No states in state stack!");
         }
-    } else {
-        // This should not happen.  There should always be at least
-        // one state in the stack so the game knows what to render.
-        panic!("No states in state stack!");
     }
 }
 
