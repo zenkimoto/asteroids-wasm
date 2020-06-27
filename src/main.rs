@@ -3,6 +3,7 @@ mod game_state;
 
 use quicksilver::{
     input::Event,
+    geom::Vector,
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
@@ -31,9 +32,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
     let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
-    let mut states = vec![
-        StateType::InitialState(GameState::new(&window_size))
-    ];
+    let mut states = initialize_game_states(&window_size);
 
     loop {
         if let Some(state_type) = states.last_mut() {
@@ -50,6 +49,12 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
             panic!("No states in state stack!");
         }
     }
+}
+
+fn initialize_game_states(window_size: &Vector) -> Vec<StateType> {
+    vec![
+        StateType::InitialState(GameState::new(window_size))
+    ]
 }
 
 async fn handle_input_events(input: &mut Input, state: &mut dyn State) {
