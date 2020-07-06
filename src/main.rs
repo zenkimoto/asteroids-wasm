@@ -1,3 +1,4 @@
+mod renderable;
 mod state;
 mod player;
 mod game_state;

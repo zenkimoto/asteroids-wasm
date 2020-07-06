@@ -2,7 +2,6 @@ use quicksilver::{
     input::{Key},
     Graphics, Input, Result,
 };
-// use crate::context::Context;
 
 pub trait State {
     fn update(&mut self, input: &mut Input);

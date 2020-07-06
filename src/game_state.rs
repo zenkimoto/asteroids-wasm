@@ -4,8 +4,10 @@ use quicksilver::{
     graphics::Color,
     Graphics, Input, Result,
 };
+
 use crate::state::State;
 use crate::player::Player;
+use crate::renderable::Renderable;
 
 pub struct GameState {
     location: Vector,
@@ -37,7 +39,7 @@ impl State for GameState {
         gfx.fill_rect(&rect, Color::RED);
         gfx.stroke_rect(&rect, Color::BLACK);
 
-        gfx.stroke_polygon(&self.player.vertices, Color::WHITE);
+        self.player.render(gfx)?;
 
         Ok(())
     }
