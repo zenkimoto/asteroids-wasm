@@ -1,4 +1,5 @@
 mod state;
+mod player;
 mod game_state;
 
 use quicksilver::{
@@ -21,7 +22,7 @@ fn main() {
 }
 
 enum StateType {
-    InitialState(GameState),
+    Asteroids(GameState),
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
@@ -49,7 +50,7 @@ fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
     debug_assert!(states.len() > 0);
 
     match states.last_mut() {
-        Some(StateType::InitialState(state)) => state,
+        Some(StateType::Asteroids(state)) => state,
         _ => {
             // This should not happen.  There should always be at least
             // one state in the stack so the game knows what to render.
@@ -60,7 +61,7 @@ fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
 
 fn initialize_game_states(window_size: &Vector) -> Vec<StateType> {
     vec![
-        StateType::InitialState(GameState::new(window_size))
+        StateType::Asteroids(GameState::new(window_size))
     ]
 }
 
