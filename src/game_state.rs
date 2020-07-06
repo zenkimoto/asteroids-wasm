@@ -4,12 +4,13 @@ use quicksilver::{
     graphics::Color,
     Graphics, Input, Result,
 };
-// use crate::context::Context;
 use crate::state::State;
+use crate::player::Player;
 
 pub struct GameState {
     location: Vector,
     window_size: Vector,
+    player: Player,
 }
 
 impl GameState {
@@ -17,6 +18,7 @@ impl GameState {
         Self {
             location: Vector::new(350.0, 100.0),
             window_size: window_size.clone(),
+            player: Player::new(Vector::new(window_size.x / 2.0, window_size.y / 2.0)),
         }
     }
 }
@@ -27,13 +29,15 @@ impl State for GameState {
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
-        // Clear the screen to a blank, white color
-        gfx.clear(Color::WHITE);
+        // Clear the screen to a black
+        gfx.clear(Color::BLACK);
         // Paint a blue square with a red outline in the center of our screen
         // It should have a top-left of (350, 100) and a size of (150, 100)
         let rect = Rectangle::new(self.location, Vector::new(100.0, 100.0));
         gfx.fill_rect(&rect, Color::RED);
         gfx.stroke_rect(&rect, Color::BLACK);
+
+        gfx.stroke_polygon(&self.player.vertices, Color::WHITE);
 
         Ok(())
     }
