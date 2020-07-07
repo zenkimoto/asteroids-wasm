@@ -1,5 +1,5 @@
 use quicksilver::{
-    geom::{Rectangle, Vector},
+    geom::Vector,
     input::Key,
     graphics::Color,
     Graphics, Input, Result,
@@ -7,7 +7,7 @@ use quicksilver::{
 
 use crate::state::State;
 use crate::player::Player;
-use crate::renderable::Renderable;
+use crate::game_object::GameObject;
 
 pub struct GameState {
     location: Vector,
@@ -27,17 +27,12 @@ impl GameState {
 
 impl State for GameState {
     fn update(&mut self, _input: &mut Input) {
-
+        self.player.update();
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a black
         gfx.clear(Color::BLACK);
-        // Paint a blue square with a red outline in the center of our screen
-        // It should have a top-left of (350, 100) and a size of (150, 100)
-        let rect = Rectangle::new(self.location, Vector::new(100.0, 100.0));
-        gfx.fill_rect(&rect, Color::RED);
-        gfx.stroke_rect(&rect, Color::BLACK);
 
         self.player.render(gfx)?;
 
@@ -45,11 +40,11 @@ impl State for GameState {
     }
 
     fn key_down(&mut self, key: Key) {
-        if key == Key::Right {
-            self.location = Vector::new(self.location.x + 10.0, self.location.y);
-        }
         if key == Key::Left {
-            self.location = Vector::new(self.location.x - 10.0, self.location.y);
+            self.player.rotate(-4.0);
+        }
+        if key == Key::Right {
+            self.player.rotate(4.0);
         }
     }
 }

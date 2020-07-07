@@ -1,4 +1,5 @@
-mod renderable;
+mod math;
+mod game_object;
 mod state;
 mod player;
 mod game_state;
