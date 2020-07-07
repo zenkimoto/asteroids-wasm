@@ -20,7 +20,7 @@ impl GameState {
         Self {
             location: Vector::new(350.0, 100.0),
             window_size: window_size.clone(),
-            player: Player::new(Vector::new(window_size.x / 2.0, window_size.y / 2.0)),
+            player: Player::new(&window_size),
         }
     }
 }
