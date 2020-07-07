@@ -6,6 +6,7 @@ mod game_state;
 
 use quicksilver::{
     input::Event,
+    input::Key,
     geom::Vector,
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
@@ -74,16 +75,23 @@ fn initialize_game_states(window_size: &Vector) -> Vec<StateType> {
 async fn handle_input_events(input: &mut Input, state: &mut dyn State) {
     while let Some(e) = input.next_event().await {
         match e {
-            Event::KeyboardInput(key) if key.is_down() => state.key_down(key.key()),
             Event::KeyboardInput(key) if key.is_down() == false => state.key_up(key.key()),
             _ => { }
         }
-     }
+    }
 }
 
 fn update_game_state(update_timer: &mut Timer, input: &mut Input, state: &mut dyn State) {
     // We use a while loop rather than an if so that we can try to catch up in the event of having a slow down.
     while update_timer.tick() {
+        if input.key_down(Key::Left) {
+            state.key_down(Key::Left);
+        }
+
+        if input.key_down(Key::Right) {
+            state.key_down(Key::Right);
+        }
+
         state.update(input);
     }
 }
