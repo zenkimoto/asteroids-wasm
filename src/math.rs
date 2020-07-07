@@ -12,11 +12,11 @@ pub trait VectorMath {
 
 impl VectorMath for Vector {
     fn multiply(&self, rhs: f32) -> Vector {
-        Vector::new(&self.x * rhs, &self.y * rhs)
+        v!(&self.x * rhs, &self.y * rhs)
     }
 
     fn divide(&self, rhs: f32) -> Vector {
-        Vector::new(&self.x / rhs, &self.y / rhs)
+        v!(&self.x / rhs, &self.y / rhs)
     }
 
     fn rotate(&self, degrees: f32) -> Vector {

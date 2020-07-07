@@ -1,3 +1,4 @@
+#[macro_use] mod macros;
 mod math;
 mod game_object;
 mod state;
@@ -33,7 +34,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
     // HACK: Quicksilver has a bug that does not return correct window size
     // when using WASM deployment.  For now we're hard coding the
     // window size.
-    let window_size = Vector::new(1024.0, 768.0);
+    let window_size = v!(1024.0, 768.0);
 
     println!("Window Size: {:?}", window_size);  // Default: 1024.0 x 768.0
 
