@@ -10,7 +10,6 @@ use crate::player::Player;
 use crate::game_object::GameObject;
 
 pub struct GameState {
-    location: Vector,
     window_size: Vector,
     player: Player,
 }
@@ -18,7 +17,6 @@ pub struct GameState {
 impl GameState {
     pub fn new(window_size: &Vector) -> Self {
         Self {
-            location: Vector::new(350.0, 100.0),
             window_size: window_size.clone(),
             player: Player::new(&window_size),
         }
