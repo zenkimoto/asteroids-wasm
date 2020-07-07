@@ -41,10 +41,6 @@ impl Player {
     }
 
     pub fn rotate(&mut self, degrees: f32) {
-        // for i in 0..self.object_vertices.len() {
-        //     self.object_vertices[i] = self.object_vertices[i].rotate(degrees);
-        // }
-
         self.object_vertices = self.object_vertices.iter().map(|x| x.rotate(degrees)).collect();
     }
 }
@@ -57,11 +53,6 @@ impl GameObject for Player {
     }
 
     fn update(&mut self) {
-        // for i in 0..self.object_vertices.len() {
-        //     self.world_vertices[i] = self.object_vertices[i] + self.location;
-        //     self.world_vertices[i] = self.world_vertices[i] + self.translation;
-        // }
-
         self.world_vertices = self.object_vertices.iter().map(|x| *x + self.location + self.translation).collect();
     }
 }
