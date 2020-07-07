@@ -28,7 +28,11 @@ enum StateType {
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
-   let window_size = window.size();
+    // let window_size = window.size();
+    // HACK: Quicksilver has a bug that does not return correct window size
+    // when using WASM deployment.  For now we're hard coding the
+    // window size.
+    let window_size = Vector::new(1024.0, 768.0);
 
     println!("Window Size: {:?}", window_size);  // Default: 1024.0 x 768.0
 
