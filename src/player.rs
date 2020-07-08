@@ -63,9 +63,9 @@ impl Player {
 
     pub fn apply_thrust(&mut self) {
         let direction = self.get_direction();
-        println!("Ship Direction: {:?}", direction);
+        // println!("Ship Direction: {:?}", direction);
         let thrust = direction.multiply(0.6);
-        println!("Applying Thrust: {:?}", thrust);
+        // println!("Applying Thrust: {:?}", thrust);
         self.apply_force(thrust);
     }
 
@@ -94,12 +94,11 @@ impl Player {
 
         // bullet is out of bounds, reset bullet to be shot again
         // bullets are in world space
-        for i in 0..self.bullets.len() {
-            if self.bullets[i].location.x < 0.0 || self.bullets[i].location.x >= 1024.0 {
-                self.bullets[i].alive = false;
-            }
-            if self.bullets[i].location.y < 0.0 || self.bullets[i].location.y >= 768.0 {
-                self.bullets[i].alive = false;
+        for bullet in self.bullets.iter_mut() {
+            if bullet.location.x < 0.0 || self.location.x >= 1024.0 {
+                bullet.alive = false;
+            } else if bullet.location.y < 0.0 || self.location.y >= 768.0 {
+                bullet.alive = false;
             }
         }
     }
@@ -115,13 +114,14 @@ impl Player {
     }
 
     pub fn shoot_bullet(&mut self) {
-        for i in 0..self.bullets.len() {
-            if self.bullets[i].alive == false {
-                self.bullets[i].alive = true;
-                self.bullets[i].location = self.world_vertices[0].clone();
-                self.bullets[i].velocity = self.get_direction().multiply(8.1);
-                break;
-            }
+        let velocity = self.get_direction().multiply(8.1);
+        let location = self.world_vertices.first().unwrap().clone();
+
+        for bullet in self.bullets.iter_mut().filter(|x| !x.alive) {
+            bullet.alive = true;
+            bullet.location = location;
+            bullet.velocity = velocity;
+            break;
         }
     }
 
@@ -137,10 +137,8 @@ impl GameObject for Player {
             gfx.stroke_circle(&circle, Color::BLUE);
         }
 
-        for i in 0..self.bullets.len() {
-            if self.bullets[i].alive {
-                self.bullets[i].render(gfx)?;
-            }
+        for bullet in self.bullets.iter().filter(|x| x.alive) {
+            bullet.render(gfx)?;
         }
 
         Ok(())
@@ -157,11 +155,6 @@ impl GameObject for Player {
                                                   .map(|x| *x + self.location + self.translation)
                                                   .collect();
 
-        for i in 0..self.bullets.len() {
-            if self.bullets[i].alive == true {
-                // println!("Bullet location: {:?}", self.bullets[i]);
-                self.bullets[i].location = self.bullets[i].location + self.bullets[i].velocity;
-            }
-        }
+        self.bullets.iter_mut().filter(|x| x.alive).for_each(|x| x.location = x.location + x.velocity);
     }
 }
