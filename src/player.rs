@@ -3,6 +3,7 @@ use quicksilver::{
     geom::Vector,
     Graphics, Result,
 };
+// use quicksilver::geom::Circle;
 
 pub struct Player {
     pub hit_radius: f32,
@@ -87,11 +88,27 @@ impl Player {
             self.location.y = -screen_height;
         }
     }
+
+    pub fn handle_collsion(&mut self) {
+        self.location = Vector::ZERO;
+        self.velocity = Vector::ZERO;
+        self.lives = if self.lives > 0 { self.lives - 1 } else { 0 }
+    }
+
+    pub fn is_alive(&self) -> bool {
+        self.lives > 0
+    }
 }
 
 impl GameObject for Player {
     fn render(&self, gfx: &mut Graphics) -> Result<()> {
-        gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
+        if self.is_alive() {
+            gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
+        }
+
+        // DEBUG: Collision Circle For Debugging
+        // let circle = Circle::new(self.location + self.translation, self.hit_radius);
+        // gfx.stroke_circle(&circle, Color::BLUE);
 
         Ok(())
     }
