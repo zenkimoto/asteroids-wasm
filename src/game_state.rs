@@ -26,6 +26,7 @@ impl GameState {
 impl State for GameState {
     fn update(&mut self, _input: &mut Input) {
         self.player.update();
+        self.player.check_bounds();
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {

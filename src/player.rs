@@ -63,6 +63,30 @@ impl Player {
         println!("Applying Thrust: {:?}", thrust);
         self.apply_force(thrust);
     }
+
+    pub fn check_bounds(&mut self) {
+        let screen_width = self.translation.x;
+        let screen_height = self.translation.y;
+
+        // println!("screen_width: {:?}", screen_width);
+        // println!("screen_height: {:?}", screen_height);
+
+        if self.location.x < -screen_width {
+            self.location.x = screen_width;
+        }
+
+        if self.location.x > screen_width {
+            self.location.x = -screen_width;
+        }
+
+        if self.location.y < -screen_height {
+            self.location.y = screen_height;
+        }
+
+        if self.location.y > screen_height {
+            self.location.y = -screen_height;
+        }
+    }
 }
 
 impl GameObject for Player {
