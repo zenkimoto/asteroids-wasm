@@ -44,5 +44,8 @@ impl State for GameState {
         if key == Key::Right {
             self.player.rotate(4.0);
         }
+        if key == Key::Up {
+            self.player.apply_thrust();
+        }
     }
 }

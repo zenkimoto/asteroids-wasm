@@ -93,6 +93,10 @@ fn update_game_state(update_timer: &mut Timer, input: &mut Input, state: &mut dy
             state.key_down(Key::Right);
         }
 
+        if input.key_down(Key::Up) {
+            state.key_down(Key::Up);
+        }
+
         state.update(input);
     }
 }

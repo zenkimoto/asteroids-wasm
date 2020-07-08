@@ -55,6 +55,14 @@ impl Player {
             Vector::ZERO
         }
     }
+
+    pub fn apply_thrust(&mut self) {
+        let direction = self.get_direction();
+        println!("Ship Direction: {:?}", direction);
+        let thrust = direction.multiply(0.6);
+        println!("Applying Thrust: {:?}", thrust);
+        self.apply_force(thrust);
+    }
 }
 
 impl GameObject for Player {
@@ -65,6 +73,12 @@ impl GameObject for Player {
     }
 
     fn update(&mut self) {
+        self.velocity = self.velocity.limit(4.0);
+        self.location = self.location + self.velocity;
+
+        // println!("Ship Location: {:?}", self.location);
+        // println!("Ship Velocity: {:?}", self.velocity);
+
         self.world_vertices = self.object_vertices.iter()
                                                   .map(|x| *x + self.location + self.translation)
                                                   .collect();
