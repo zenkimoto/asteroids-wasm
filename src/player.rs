@@ -3,7 +3,12 @@ use quicksilver::{
     geom::Vector,
     Graphics, Result,
 };
-// use quicksilver::geom::Circle;
+
+use crate::math::VectorMath;
+use crate::game_object::GameObject;
+use crate::bullet::Bullet;
+
+const NUM_BULLETS: usize = 20;
 
 pub struct Player {
     pub hit_radius: f32,
@@ -13,10 +18,8 @@ pub struct Player {
     pub object_vertices: Vec<Vector>,
     pub world_vertices: Vec<Vector>,
     pub translation: Vector,
+    pub bullets: Vec<Bullet>,
 }
-
-use crate::math::VectorMath;
-use crate::game_object::GameObject;
 
 impl Player {
     pub fn new(window_size: &Vector) -> Self {
@@ -36,6 +39,7 @@ impl Player {
             object_vertices,
             world_vertices,
             translation,
+            bullets: vec![Bullet::new(); NUM_BULLETS],
         }
     }
 
@@ -87,6 +91,17 @@ impl Player {
         if self.location.y > screen_height {
             self.location.y = -screen_height;
         }
+
+        // bullet is out of bounds, reset bullet to be shot again
+        // bullets are in world space
+        for i in 0..self.bullets.len() {
+            if self.bullets[i].location.x < 0.0 || self.bullets[i].location.x >= 1024.0 {
+                self.bullets[i].alive = false;
+            }
+            if self.bullets[i].location.y < 0.0 || self.bullets[i].location.y >= 768.0 {
+                self.bullets[i].alive = false;
+            }
+        }
     }
 
     pub fn handle_collsion(&mut self) {
@@ -98,17 +113,35 @@ impl Player {
     pub fn is_alive(&self) -> bool {
         self.lives > 0
     }
+
+    pub fn shoot_bullet(&mut self) {
+        for i in 0..self.bullets.len() {
+            if self.bullets[i].alive == false {
+                self.bullets[i].alive = true;
+                self.bullets[i].location = self.world_vertices[0].clone();
+                self.bullets[i].velocity = self.get_direction().multiply(8.1);
+                break;
+            }
+        }
+    }
+
 }
 
 impl GameObject for Player {
     fn render(&self, gfx: &mut Graphics) -> Result<()> {
         if self.is_alive() {
             gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
+
+            // DEBUG: Collision Circle For Debugging
+            let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
+            gfx.stroke_circle(&circle, Color::BLUE);
         }
 
-        // DEBUG: Collision Circle For Debugging
-        // let circle = Circle::new(self.location + self.translation, self.hit_radius);
-        // gfx.stroke_circle(&circle, Color::BLUE);
+        for i in 0..self.bullets.len() {
+            if self.bullets[i].alive {
+                self.bullets[i].render(gfx)?;
+            }
+        }
 
         Ok(())
     }
@@ -123,5 +156,12 @@ impl GameObject for Player {
         self.world_vertices = self.object_vertices.iter()
                                                   .map(|x| *x + self.location + self.translation)
                                                   .collect();
+
+        for i in 0..self.bullets.len() {
+            if self.bullets[i].alive == true {
+                // println!("Bullet location: {:?}", self.bullets[i]);
+                self.bullets[i].location = self.bullets[i].location + self.bullets[i].velocity;
+            }
+        }
     }
 }

@@ -39,14 +39,17 @@ impl State for GameState {
     }
 
     fn key_down(&mut self, key: Key) {
-        if key == Key::Left {
-            self.player.rotate(-4.0);
+        match key {
+            Key::Left => self.player.rotate(-4.0),
+            Key::Right => self.player.rotate(4.0),
+            Key::Up => self.player.apply_thrust(),
+            _ => { }
         }
-        if key == Key::Right {
-            self.player.rotate(4.0);
-        }
-        if key == Key::Up {
-            self.player.apply_thrust();
+    }
+
+    fn key_up(&mut self, key: Key) {
+        if key == Key::Space {
+            self.player.shoot_bullet();
         }
     }
 }

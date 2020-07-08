@@ -2,6 +2,7 @@
 mod math;
 mod game_object;
 mod state;
+mod bullet;
 mod player;
 mod game_state;
 
@@ -95,6 +96,10 @@ fn update_game_state(update_timer: &mut Timer, input: &mut Input, state: &mut dy
 
         if input.key_down(Key::Up) {
             state.key_down(Key::Up);
+        }
+
+        if input.key_down(Key::Space) {
+            state.key_down(Key::Space);
         }
 
         state.update(input);
