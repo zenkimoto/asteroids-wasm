@@ -94,11 +94,12 @@ impl Player {
 
         // bullet is out of bounds, reset bullet to be shot again
         // bullets are in world space
-        for bullet in self.bullets.iter_mut() {
-            if bullet.location.x < 0.0 || self.location.x >= 1024.0 {
-                bullet.alive = false;
-            } else if bullet.location.y < 0.0 || self.location.y >= 768.0 {
-                bullet.alive = false;
+        for i in 0..self.bullets.len() {
+            if self.bullets[i].location.x < 0.0 || self.bullets[i].location.x >= 1024.0 {
+                self.bullets[i].alive = false;
+            }
+            if self.bullets[i].location.y < 0.0 || self.bullets[i].location.y >= 768.0 {
+                self.bullets[i].alive = false;
             }
         }
     }
