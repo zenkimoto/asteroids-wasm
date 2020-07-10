@@ -21,6 +21,8 @@ macro_rules! rand {
     };
 }
 
+const HIT_RADIUS: f32 = 35.0;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Sizes {
     Small,
@@ -58,7 +60,7 @@ impl Asteroid {
         Self {
             alive,
             size: Sizes::Large,
-            hit_radius: 35.0,
+            hit_radius: HIT_RADIUS,
             rotation: Asteroid::get_random_degrees(),
             location: Asteroid::get_random_location(&window_size),
             velocity: Asteroid::get_random_velocity(),
@@ -169,21 +171,21 @@ impl Asteroid {
                 for i in 0..self.object_vertices.len() {
                     self.object_vertices[i] = object_vertices[i].divide(2.0);
                 }
-                self.hit_radius = 35.0 / 2.0;
+                self.hit_radius = HIT_RADIUS / 2.0;
                 Sizes::Medium
             },
             Sizes::Medium => {
                 for i in 0..self.object_vertices.len() {
                     self.object_vertices[i] = object_vertices[i].divide(4.0);
                 }
-                self.hit_radius = 35.0 / 4.0;
+                self.hit_radius = HIT_RADIUS / 4.0;
                 Sizes::Small
             },
             Sizes::Small => {
                 for i in 0..self.object_vertices.len() {
                     self.object_vertices[i] = object_vertices[i].divide(8.0);
                 }
-                self.hit_radius = 35.0 / 8.0;
+                self.hit_radius = HIT_RADIUS / 8.0;
                 Sizes::Small
             }
         };
