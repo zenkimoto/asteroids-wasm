@@ -8,6 +8,7 @@ use quicksilver::{
 use crate::state::State;
 use crate::player::Player;
 use crate::asteroids::{Asteroid, Sizes};
+use crate::hud::Hud;
 use crate::game_object::GameObject;
 
 const NUM_ASTEROIDS: u8 = 27;
@@ -16,7 +17,8 @@ const NUM_SPAWN_ASTEROIDS: i32 = 3;
 pub struct GameState {
     window_size: Vector,
     player: Player,
-    asteroids: Vec<Asteroid>
+    asteroids: Vec<Asteroid>,
+    hud: Hud,
 }
 
 impl GameState {
@@ -24,7 +26,8 @@ impl GameState {
         Self {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
-            asteroids: GameState::initialize_asteroids(window_size)
+            asteroids: GameState::initialize_asteroids(window_size),
+            hud: Hud::new(),
         }
     }
 
@@ -56,7 +59,7 @@ impl State for GameState {
             // Handle Collision Between Player and Asteroid
             if asteroid.check_collision(self.player.location, self.player.hit_radius) {
                 self.player.handle_collsion();
-                //hud.set_lives(player.lives);
+                self.hud.set_lives(self.player.lives);
             }
 
             // Handle Collision Between Bullet and Asteroid
@@ -106,6 +109,9 @@ impl State for GameState {
         for asteroid in self.asteroids.iter_mut() {
             asteroid.render(gfx)?;
         }
+
+        // Render hud
+        self.hud.render(gfx)?;
 
         Ok(())
     }
