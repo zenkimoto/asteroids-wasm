@@ -162,36 +162,22 @@ impl Asteroid {
 
     pub fn shrink_asteroid(&mut self, size: &Sizes) {
         let object_vertices = Asteroid::get_object_vertices();
-
-        // for i in 0..self.object_vertices.len() {
-        //     // converts verts from obj space to world space and translate world space to screen space
-        //     object_vertices[i] = object_vertices[i].multiply(88.0);
-        // }
-
+        
         // converts verts from obj space to world space and translate world space to screen space
         let object_vertices: Vec<Vector> = object_vertices.iter().map(|x| x.multiply(88.0)).collect();
 
         self.size = match size {
             Sizes::Large => {
-                // for i in 0..self.object_vertices.len() {
-                //     self.object_vertices[i] = object_vertices[i].divide(2.0);
-                // }
                 self.object_vertices = object_vertices.iter().map(|x| x.divide(2.0)).collect();
                 self.hit_radius = HIT_RADIUS / 2.0;
                 Sizes::Medium
             },
             Sizes::Medium => {
-                // for i in 0..self.object_vertices.len() {
-                //     self.object_vertices[i] = object_vertices[i].divide(4.0);
-                // }
                 self.object_vertices = object_vertices.iter().map(|x| x.divide(4.0)).collect();
                 self.hit_radius = HIT_RADIUS / 4.0;
                 Sizes::Small
             },
             Sizes::Small => {
-                // for i in 0..self.object_vertices.len() {
-                //     self.object_vertices[i] = object_vertices[i].divide(8.0);
-                // }
                 self.object_vertices = object_vertices.iter().map(|x| x.divide(8.0)).collect();
                 self.hit_radius = HIT_RADIUS / 8.0;
                 Sizes::Small
