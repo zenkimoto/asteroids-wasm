@@ -14,11 +14,11 @@ pub struct Hud {
 
 impl Hud {
     pub fn new() -> Self {
-        let mut object_vertices = vec!(Vector::new(0.0, 1.5), Vector::new(-1.0, -1.0), Vector::new(1.0, -1.0), Vector::new(0.0, 1.5));
+        let object_vertices = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
 
-        for i in 0..object_vertices.len() {
-            object_vertices[i] = object_vertices[i].multiply(6.0);
-        }
+        let object_vertices = object_vertices.iter()
+                                             .map(|x| x.multiply(6.0))
+                                             .collect();
 
         Self {
             player_lives: 0,
@@ -31,13 +31,7 @@ impl Hud {
     }
 
     fn build_ship_icon(&self, location: Vector) -> Vec<Vector> {
-        let mut icon = self.object_vertices.clone();
-
-        for i in 0..icon.len() {
-            icon[i] += location;
-        }
-
-        icon
+        self.object_vertices.iter().map(|x| *x + location).collect()
     }
 }
 
