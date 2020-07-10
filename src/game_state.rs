@@ -7,11 +7,13 @@ use quicksilver::{
 
 use crate::state::State;
 use crate::player::Player;
+use crate::asteroids::Asteroid;
 use crate::game_object::GameObject;
 
 pub struct GameState {
     window_size: Vector,
     player: Player,
+    asteroids: Vec<Asteroid>
 }
 
 impl GameState {
@@ -19,7 +21,12 @@ impl GameState {
         Self {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
+            asteroids: GameState::initialize_asteroids(window_size)
         }
+    }
+
+    fn initialize_asteroids(window_size: &Vector) -> Vec<Asteroid> {
+        (0..27).map(|i| Asteroid::new(&window_size, i < 3)).collect()
     }
 }
 
@@ -27,6 +34,11 @@ impl State for GameState {
     fn update(&mut self, _input: &mut Input) {
         self.player.update();
         self.player.check_bounds();
+
+        for asteroid in self.asteroids.iter_mut() {
+            asteroid.update();
+            asteroid.check_bounds();
+        }
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
@@ -34,6 +46,10 @@ impl State for GameState {
         gfx.clear(Color::BLACK);
 
         self.player.render(gfx)?;
+
+        for asteroid in self.asteroids.iter_mut() {
+            asteroid.render(gfx)?;
+        }
 
         Ok(())
     }

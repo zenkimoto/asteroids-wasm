@@ -23,7 +23,7 @@ pub struct Player {
 
 impl Player {
     pub fn new(window_size: &Vector) -> Self {
-        let translation = window_size.clone() / 2.0;
+        let translation = window_size.divide(2.0);
 
         let object_vertices = vec!(v!(0.0, -18.0), v!(12.0, 12.0), v!(-12.0, 12.0), v!(0.0, -18.0));
 

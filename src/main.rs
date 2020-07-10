@@ -4,6 +4,7 @@ mod game_object;
 mod state;
 mod bullet;
 mod player;
+mod asteroids;
 mod game_state;
 
 use quicksilver::{
