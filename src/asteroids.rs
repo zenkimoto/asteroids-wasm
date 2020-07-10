@@ -11,13 +11,13 @@ use crate::game_object::GameObject;
 
 macro_rules! rand {
     () => {
-        rand::thread_rng().gen::<u32>()
+        rand::thread_rng().gen::<u16>() as f32
     };
     ($e:expr) => {
-        rand::thread_rng().gen_range(0, $e)
+        rand::thread_rng().gen_range(0, $e) as f32
     };
     ($e:expr, $f:expr) => {
-        rand::thread_rng().gen_range($e, $f)
+        rand::thread_rng().gen_range($e, $f) as f32
     };
 }
 
@@ -87,25 +87,25 @@ impl Asteroid {
     }
 
     fn get_random_location(window_size: &Vector) -> Vector {
-        let lx = rand!() as f32 % window_size.x / 2.0;
-        let ly = rand!() as f32 % window_size.y / 2.0;
+        let lx = rand!() % window_size.x / 2.0;
+        let ly = rand!() % window_size.y / 2.0;
 
         v!(lx, ly)
     }
 
-    fn get_random_sign() -> i32 {
-        2 * rand!(2) - 1
+    fn get_random_sign() -> f32 {
+        2.0 * rand!(2) - 1.0
     }
 
     fn get_random_velocity() -> Vector {
-        let vx = (rand!() as f32 % 500.0) / 1000.0 * (Asteroid::get_random_sign() as f32);
-        let vy = (rand!() as f32 % 500.0) / 1000.0 * (Asteroid::get_random_sign() as f32);
+        let vx = rand!(500) / 1000.0 * Asteroid::get_random_sign();
+        let vy = rand!(500) / 1000.0 * Asteroid::get_random_sign();
 
         v!(vx, vy)
     }
 
     fn get_random_degrees() -> f32 {
-        (Asteroid::get_random_sign() as f32) * (rand!() as f32 % 100.0 + 1000.0) / 1000.0
+        Asteroid::get_random_sign() * (rand!(100) + 1000.0) / 1000.0
     }
 
     pub fn is_dead(&self) -> bool {
