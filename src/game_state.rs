@@ -7,10 +7,11 @@ use quicksilver::{
 
 use crate::state::State;
 use crate::player::Player;
-use crate::asteroids::Asteroid;
+use crate::asteroids::{Asteroid, Sizes};
 use crate::game_object::GameObject;
 
 const NUM_ASTEROIDS: u8 = 27;
+const NUM_SPAWN_ASTEROIDS: i32 = 3;
 
 pub struct GameState {
     window_size: Vector,
@@ -34,9 +35,60 @@ impl GameState {
 
 impl State for GameState {
     fn update(&mut self, _input: &mut Input) {
+        let mut spawn_queue: Vec<(Sizes, Vector)> = vec![];
+
+        // Update Player
         self.player.update();
         self.player.check_bounds();
 
+
+        // If all asteroids are destroyed, re-initialize level
+        if self.asteroids.iter().all(|a| a.is_dead()) {
+            self.asteroids = GameState::initialize_asteroids(&self.window_size);
+        }
+
+        // Check for Collisions
+        for asteroid in self.asteroids.iter_mut() {
+            if asteroid.is_dead() {
+                continue;
+            }
+
+            // Handle Collision Between Player and Asteroid
+            if asteroid.check_collision(self.player.location, self.player.hit_radius) {
+                self.player.handle_collsion();
+                //hud.set_lives(player.lives);
+            }
+
+            // Handle Collision Between Bullet and Asteroid
+            for bullet in self.player.bullets.iter_mut() {
+                if bullet.is_alive() && asteroid.check_collision(bullet.location - self.player.translation, 1.0) {
+                    asteroid.handle_collision();
+                    bullet.handle_collision();
+
+                    // If an asteroid is destroyed, queue a smaller version to be spawned
+                    if asteroid.size != Sizes::Small {
+                        spawn_queue.push((asteroid.size, asteroid.location));
+                    }
+                }
+            }
+        }
+
+        // Spawn Smaller Asteroids
+        while let Some((size, location)) = spawn_queue.pop() {
+            let mut spawn_count = 0;
+
+            // Reuse dead asteroids for spawning
+            for asteroid in self.asteroids.iter_mut() {
+                if asteroid.is_alive() { continue; }
+
+                if spawn_count < NUM_SPAWN_ASTEROIDS {
+                    asteroid.spawn_asteroid(&location, &size);
+                    spawn_count += 1;
+                }
+            }
+        }
+
+        // Update Asteroids
         for asteroid in self.asteroids.iter_mut() {
             asteroid.update();
             asteroid.check_bounds();
@@ -47,8 +99,10 @@ impl State for GameState {
         // Clear the screen to a black
         gfx.clear(Color::BLACK);
 
+        // Render player and bullets
         self.player.render(gfx)?;
 
+        // Render asteroids
         for asteroid in self.asteroids.iter_mut() {
             asteroid.render(gfx)?;
         }

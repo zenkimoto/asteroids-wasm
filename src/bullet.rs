@@ -25,6 +25,10 @@ impl Bullet {
     pub fn handle_collision(&mut self) {
         self.alive = false;
     }
+
+    pub fn is_alive(&self) -> bool {
+        return self.alive;
+    }
 }
 
 impl GameObject for Bullet {
