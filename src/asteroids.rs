@@ -206,11 +206,17 @@ impl GameObject for Asteroid {
     }
 
     fn update(&mut self) {
+        // Move asteroid's location based on current velocity vector
         self.location = self.location + self.velocity;
 
-        for i in 0..self.object_vertices.len() {
-            self.world_vertices[i] = self.object_vertices[i] + self.location + self.translation;
-            self.object_vertices[i] = self.object_vertices[i].rotate(self.rotation);
-        }
+        // Translate object vertices to world vertices for rendering
+        self.world_vertices = self.object_vertices.iter()
+                                                  .map(|x| *x + self.location + self.translation)
+                                                  .collect();
+
+        // Rotate asteroid for next render/update cycle
+        self.object_vertices = self.object_vertices.iter()
+                                                   .map(|x| x.rotate(self.rotation))
+                                                   .collect();
     }
 }
