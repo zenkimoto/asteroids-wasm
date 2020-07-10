@@ -13,6 +13,12 @@ macro_rules! rand {
     () => {
         rand::thread_rng().gen::<u32>()
     };
+    ($e:expr) => {
+        rand::thread_rng().gen_range(0, $e)
+    };
+    ($e:expr, $f:expr) => {
+        rand::thread_rng().gen_range($e, $f)
+    };
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -39,32 +45,6 @@ impl Asteroid {
     pub fn new(window_size: &Vector, alive: bool) -> Self {
         let translation = window_size.divide(2.0);
 
-        let sign_x = rand!() % 100;
-        let sign_y = rand!() % 100;
-
-        // Start Asteroid in random location
-        let mut lx = rand!() as f32 % window_size.x / 2.0;
-        let mut ly = rand!() as f32 % window_size.y / 2.0;
-
-        // give asteroid random velocity
-        let mut vx = (rand!() as f32 % 500.0) / 1000.0;
-        let mut vy = (rand!() as f32 % 500.0) / 1000.0;
-
-        let mut degrees = (rand!() as f32 % 100.0 + 1000.0) / 1000.0;
-
-        // 50% chance the sign of the variable will be switched to negative
-        if sign_x >= 50 {
-            vx = -vx;
-            lx = -lx;
-            degrees = -degrees;
-        }
-
-        // 50% chance the sign of the variable will be switched to negative
-        if sign_y >= 50 {
-            vy = -vy;
-            ly = -ly;
-        }
-
         let mut object_vertices = Asteroid::get_object_vertices();
 
         let mut world_vertices: Vec<Vector> = Vec::new();
@@ -79,9 +59,9 @@ impl Asteroid {
             alive,
             size: Sizes::Large,
             hit_radius: 35.0,
-            rotation: degrees,
-            location: Vector::new(lx, ly),
-            velocity: Vector::new(vx, vy),
+            rotation: Asteroid::get_random_degrees(),
+            location: Asteroid::get_random_location(&window_size),
+            velocity: Asteroid::get_random_velocity(),
             object_vertices,
             world_vertices,
             translation,
@@ -90,18 +70,40 @@ impl Asteroid {
 
     fn get_object_vertices() -> Vec<Vector> {
         vec![
-            Vector::new(0.0, 0.4),
-            Vector::new(0.2, 0.3),
-            Vector::new(0.2, 0.1),
-            Vector::new(0.4, 0.0),
-            Vector::new(0.3, -0.2),
-            Vector::new(0.1, -0.2),
-            Vector::new(0.0, -0.3),
-            Vector::new(-0.2, -0.2),
-            Vector::new(-0.4, 0.0),
-            Vector::new(-0.3, 0.3),
-            Vector::new(0.0, 0.4),
+            v!(0.0, 0.4),
+            v!(0.2, 0.3),
+            v!(0.2, 0.1),
+            v!(0.4, 0.0),
+            v!(0.3, -0.2),
+            v!(0.1, -0.2),
+            v!(0.0, -0.3),
+            v!(-0.2, -0.2),
+            v!(-0.4, 0.0),
+            v!(-0.3, 0.3),
+            v!(0.0, 0.4),
         ]
+    }
+
+    fn get_random_location(window_size: &Vector) -> Vector {
+        let lx = rand!() as f32 % window_size.x / 2.0;
+        let ly = rand!() as f32 % window_size.y / 2.0;
+
+        v!(lx, ly)
+    }
+
+    fn get_random_sign() -> i32 {
+        2 * rand!(2) - 1
+    }
+
+    fn get_random_velocity() -> Vector {
+        let vx = (rand!() as f32 % 500.0) / 1000.0 * (Asteroid::get_random_sign() as f32);
+        let vy = (rand!() as f32 % 500.0) / 1000.0 * (Asteroid::get_random_sign() as f32);
+
+        v!(vx, vy)
+    }
+
+    fn get_random_degrees() -> f32 {
+        (Asteroid::get_random_sign() as f32) * (rand!() as f32 % 100.0 + 1000.0) / 1000.0
     }
 
     pub fn is_dead(&self) -> bool {
@@ -148,15 +150,8 @@ impl Asteroid {
     pub fn spawn_asteroid(&mut self, location: &Vector, size: &Sizes) {
         self.location = location.clone();
         self.alive = true;
-
-        // give asteroid random velocity
-        let vx = (rand!() as f32 % 500.0) / 1000.0;
-        let vy = (rand!() as f32 % 500.0) / 1000.0;
-
-        let degrees = (rand!() as f32 % 100.0 + 1000.0) / 1000.0;
-
-        self.velocity = Vector::new(vx, vy);
-        self.rotation = degrees;
+        self.velocity = Asteroid::get_random_velocity();
+        self.rotation = Asteroid::get_random_degrees();
 
         self.shrink_asteroid(size);
     }
