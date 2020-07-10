@@ -10,6 +10,8 @@ use crate::player::Player;
 use crate::asteroids::Asteroid;
 use crate::game_object::GameObject;
 
+const NUM_ASTEROIDS: u8 = 27;
+
 pub struct GameState {
     window_size: Vector,
     player: Player,
@@ -26,7 +28,7 @@ impl GameState {
     }
 
     fn initialize_asteroids(window_size: &Vector) -> Vec<Asteroid> {
-        (0..27).map(|i| Asteroid::new(&window_size, i < 3)).collect()
+        (0..NUM_ASTEROIDS).map(|i| Asteroid::new(&window_size, i < 3)).collect()
     }
 }
 
