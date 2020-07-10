@@ -11,7 +11,7 @@ use crate::game_object::GameObject;
 
 macro_rules! rand {
     () => {
-        rand::thread_rng().gen_range(0, 32767)
+        rand::thread_rng().gen::<u32>()
     };
 }
 
