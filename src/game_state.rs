@@ -59,7 +59,6 @@ impl State for GameState {
             // Handle Collision Between Player and Asteroid
             if asteroid.check_collision(self.player.location, self.player.hit_radius) {
                 self.player.handle_collsion();
-                self.hud.set_lives(self.player.lives);
             }
 
             // Handle Collision Between Bullet and Asteroid
@@ -96,6 +95,9 @@ impl State for GameState {
             asteroid.update();
             asteroid.check_bounds();
         }
+
+        // Update Hud
+        self.hud.set_lives(self.player.lives);
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {

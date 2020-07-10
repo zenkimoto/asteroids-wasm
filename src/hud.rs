@@ -21,7 +21,7 @@ impl Hud {
         }
 
         Self {
-            player_lives: 3,
+            player_lives: 0,
             object_vertices,
         }
     }
