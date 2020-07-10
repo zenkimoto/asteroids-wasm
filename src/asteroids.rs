@@ -3,7 +3,6 @@ use quicksilver::{
     geom::Vector,
     Graphics, Result
 };
-// use quicksilver::geom::Circle;
 use rand::Rng;
 
 use crate::math::VectorMath;
@@ -47,15 +46,14 @@ impl Asteroid {
     pub fn new(window_size: &Vector, alive: bool) -> Self {
         let translation = window_size.divide(2.0);
 
-        let mut object_vertices = Asteroid::get_object_vertices();
+        let object_vertices: Vec<Vector> = Asteroid::get_object_vertices().iter()
+                                                                          .map(|x| x.multiply(88.0))
+                                                                          .collect();
 
-        let mut world_vertices: Vec<Vector> = Vec::new();
-
-        for i in 0..object_vertices.len() {
-            // converts verts from obj space to world space and translate world space to screen space
-            object_vertices[i] = object_vertices[i].multiply(88.0);
-            world_vertices.push(object_vertices[i] + translation);
-        }
+        // converts verts from obj space to world space and translate world space to screen space
+        let world_vertices = object_vertices.iter()
+                                            .map(|x| *x + translation)
+                                            .collect();
 
         Self {
             alive,
