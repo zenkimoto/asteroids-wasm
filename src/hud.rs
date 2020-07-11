@@ -7,6 +7,8 @@ use quicksilver::{
 use crate::game_object::GameObject;
 use crate::math::VectorMath;
 
+const MARGIN: f32 = 20.0;
+
 pub struct Hud {
     player_lives: i32,
     object_vertices: Vec<Vector>,
@@ -39,41 +41,25 @@ impl Hud {
 
 impl GameObject for Hud {
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
-        let mut offset = 0.0;
-        for _ in 0..self.player_lives {
-            let top_left = Vector::new(20.0 + offset, 20.0);
+        for i in 0..self.player_lives {
+            let top_left = Vector::new(MARGIN + (i as f32) * MARGIN, MARGIN);
             let new_loc = top_left;
 
             let icon = self.build_ship_icon(new_loc);
 
             gfx.fill_polygon(&icon, Color::WHITE);
-
-            offset += 20.0;
         }
 
         if self.player_lives == 0 {
-            let _ = self.font72.draw(
+            self.font72.draw(
                 gfx,
                 "Game Over!",
                 Color::WHITE,
                 Vector::new(350.0, 400.0),
-            );
+            )?;
         }
 
         Ok(())
     }
 }
-
-// impl TextRenderable for Hud {
-//     fn render(&self, gfx: &mut Graphics, font: &mut FontRenderer) {
-//         if self.player_lives == 0 {
-//             let _ = font.draw(
-//                 gfx,
-//                 "Game Over!",
-//                 Color::WHITE,
-//                 Vector::new(350.0, 400.0),
-//             );
-//         }
-//     }
-// }
 
