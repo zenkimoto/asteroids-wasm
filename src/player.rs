@@ -135,7 +135,7 @@ impl Player {
     }
 
     pub fn shoot_bullet(&mut self) {
-        let velocity = self.get_direction().multiply(8.1);
+        let velocity = self.get_direction().multiply(10.1);
         let location = self.world_vertices.first().unwrap().clone();
 
         for bullet in self.bullets.iter_mut().filter(|x| !x.alive) {
