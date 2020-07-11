@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use quicksilver::{
     graphics::Color,
     geom::Vector,
@@ -19,6 +21,7 @@ pub struct Player {
     pub world_vertices: Vec<Vector>,
     pub translation: Vector,
     pub bullets: Vec<Bullet>,
+    pub exhaust: VecDeque<(Vector, f32)>,
 }
 
 impl Player {
@@ -40,6 +43,7 @@ impl Player {
             world_vertices,
             translation,
             bullets: vec![Bullet::new(); NUM_BULLETS],
+            exhaust: VecDeque::new(),
         }
     }
 
@@ -67,6 +71,22 @@ impl Player {
         let thrust = direction.multiply(0.6);
         // println!("Applying Thrust: {:?}", thrust);
         self.apply_force(thrust);
+
+        self.generate_exhaust();
+    }
+
+    pub fn generate_exhaust(&mut self) {
+        if let Some(head) = self.object_vertices.first() { 
+            let direction = head.normalize();
+
+            let exhaust = *head + self.location - direction.multiply(28.0);
+
+            self.exhaust.push_front((exhaust, 3.0));
+
+            while self.exhaust.len() > 10 {
+                self.exhaust.pop_back();
+            }
+        }
     }
 
     pub fn check_bounds(&mut self) {
@@ -136,6 +156,12 @@ impl GameObject for Player {
             // DEBUG: Collision Circle For Debugging
             // let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
             // gfx.stroke_circle(&circle, Color::BLUE);
+
+            for (exhaust, size) in self.exhaust.iter().filter(|x| x.1 > 0.1) {
+                let circle = quicksilver::geom::Circle::new(*exhaust + self.translation, *size);
+
+                gfx.stroke_circle(&circle, Color::WHITE);
+            }
         }
 
         for bullet in self.bullets.iter_mut().filter(|x| x.alive) {
@@ -157,5 +183,7 @@ impl GameObject for Player {
                                                   .collect();
 
         self.bullets.iter_mut().filter(|x| x.alive).for_each(|x| x.location = x.location + x.velocity);
+
+        self.exhaust.iter_mut().for_each(|x| x.1 = x.1 / 1.5);
     }
 }
