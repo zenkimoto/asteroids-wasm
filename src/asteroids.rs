@@ -46,7 +46,7 @@ impl Asteroid {
     pub fn new(window_size: &Vector, alive: bool) -> Self {
         let translation = window_size.divide(2.0);
 
-        let object_vertices: Vec<Vector> = Asteroid::get_object_vertices().iter()
+        let object_vertices: Vec<Vector> = Asteroid::generate_vertices().iter()
                                                                           .map(|x| x.multiply(88.0))
                                                                           .collect();
 
@@ -68,20 +68,23 @@ impl Asteroid {
         }
     }
 
-    fn get_object_vertices() -> Vec<Vector> {
-        vec![
-            v!(0.0, 0.4),
-            v!(0.2, 0.3),
-            v!(0.2, 0.1),
-            v!(0.4, 0.0),
-            v!(0.3, -0.2),
-            v!(0.1, -0.2),
-            v!(0.0, -0.3),
-            v!(-0.2, -0.2),
-            v!(-0.4, 0.0),
-            v!(-0.3, 0.3),
-            v!(0.0, 0.4),
-        ]
+    fn generate_vertices() -> Vec<Vector> {
+        // Randomly generate asteroid
+        let mut vertices = vec![];
+        let num_vertices = rand!(8, 21);
+        let degree_interval = 360.0 / num_vertices;
+        let is_smooth = rand!(0, 3) as i32;  // 1 in 3 chance the asteroid is smooth (more round)
+
+        for i in 0..(num_vertices as i32) {
+            let deg = degree_interval * i as f32;
+            let mag = if is_smooth == 0 { rand!(0.3, 0.4) } else { rand!(0.2, 0.45) };
+
+            let v = v!(mag, 0.0).rotate(deg);
+
+            vertices.push(v);
+        }
+
+        vertices
     }
 
     fn get_random_location(window_size: &Vector) -> Vector {
@@ -161,7 +164,7 @@ impl Asteroid {
     }
 
     pub fn shrink_asteroid(&mut self, size: &Sizes) {
-        let object_vertices = Asteroid::get_object_vertices();
+        let object_vertices = Asteroid::generate_vertices();
 
         // converts verts from obj space to world space and translate world space to screen space
         let object_vertices: Vec<Vector> = object_vertices.iter().map(|x| x.multiply(88.0)).collect();
