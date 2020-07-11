@@ -10,6 +10,7 @@ use crate::player::Player;
 use crate::asteroids::{Asteroid, Sizes};
 use crate::hud::Hud;
 use crate::game_object::GameObject;
+use crate::star_field::StarField;
 
 const NUM_ASTEROIDS: u8 = 27;
 const NUM_SPAWN_ASTEROIDS: i32 = 3;
@@ -20,6 +21,7 @@ pub struct GameState {
     asteroids: Vec<Asteroid>,
     hud: Hud,
     score: i64,
+    star_field: StarField,
 }
 
 impl GameState {
@@ -30,6 +32,7 @@ impl GameState {
             asteroids: GameState::initialize_asteroids(window_size),
             hud: Hud::new(font72, font16),
             score: 0,
+            star_field: StarField::new(window_size)
         }
     }
 
@@ -112,6 +115,9 @@ impl State for GameState {
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         // Clear the screen to a black
         gfx.clear(Color::BLACK);
+
+        // Render Starfield
+        self.star_field.render(gfx)?;
 
         // Render player and bullets
         self.player.render(gfx)?;

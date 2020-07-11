@@ -6,6 +6,7 @@ mod bullet;
 mod player;
 mod asteroids;
 mod hud;
+mod star_field;
 mod game_state;
 
 use quicksilver::{
