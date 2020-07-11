@@ -8,18 +8,6 @@ use rand::Rng;
 use crate::math::VectorMath;
 use crate::game_object::GameObject;
 
-macro_rules! rand {
-    () => {
-        rand::thread_rng().gen::<u16>() as f32
-    };
-    ($e:expr) => {
-        rand::thread_rng().gen_range(0, $e) as f32
-    };
-    ($e:expr, $f:expr) => {
-        rand::thread_rng().gen_range($e, $f) as f32
-    };
-}
-
 const HIT_RADIUS: f32 = 35.0;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
