@@ -8,15 +8,18 @@ use crate::game_object::GameObject;
 use crate::math::VectorMath;
 
 const MARGIN: f32 = 20.0;
+const CHAR_WIDTH: f32 = 8.0;
 
 pub struct Hud {
     player_lives: i32,
+    score: i64,
     object_vertices: Vec<Vector>,
     font72: FontRenderer,
+    font16: FontRenderer,
 }
 
 impl Hud {
-    pub fn new(font72: FontRenderer) -> Self {
+    pub fn new(font72: FontRenderer, font16: FontRenderer) -> Self {
         let object_vertices = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
 
         let object_vertices = object_vertices.iter()
@@ -25,13 +28,19 @@ impl Hud {
 
         Self {
             player_lives: 0,
+            score: 0,
             object_vertices,
             font72,
+            font16,
         }
     }
 
     pub fn set_lives(&mut self, lives: i32) {
         self.player_lives = lives;
+    }
+
+    pub fn set_score(&mut self, score: i64) {
+        self.score = score;
     }
 
     fn build_ship_icon(&self, location: Vector) -> Vec<Vector> {
@@ -58,6 +67,18 @@ impl GameObject for Hud {
                 Vector::new(350.0, 400.0),
             )?;
         }
+
+        // Right Align Score
+        let score_str = &format!("{}", self.score);
+        let x = 1024.0 - (score_str.len() as f32) * CHAR_WIDTH - MARGIN;
+        let y = MARGIN;
+
+        self.font16.draw(
+            gfx,
+            score_str,
+            Color::WHITE,
+            Vector::new(x, y),
+        )?;
 
         Ok(())
     }

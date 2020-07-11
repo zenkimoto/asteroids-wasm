@@ -45,11 +45,12 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
     // Load font
     let ttf = VectorFont::load("ShareTechMono-Regular.ttf").await?;
     let font72 = ttf.to_renderer(&gfx, 72.0)?;
+    let font16 = ttf.to_renderer(&gfx, 16.0)?;
 
     let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
-    let mut states = initialize_game_states(&window_size, font72);
+    let mut states = initialize_game_states(&window_size, font72, font16);
 
     loop {
         let state = get_current_game_state(&mut states);
@@ -75,9 +76,9 @@ fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
     }
 }
 
-fn initialize_game_states(window_size: &Vector, font72: FontRenderer) -> Vec<StateType> {
+fn initialize_game_states(window_size: &Vector, font72: FontRenderer, font16: FontRenderer) -> Vec<StateType> {
     vec![
-        StateType::Asteroids(GameState::new(window_size, font72))
+        StateType::Asteroids(GameState::new(window_size, font72, font16))
     ]
 }
 

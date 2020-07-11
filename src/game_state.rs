@@ -19,15 +19,17 @@ pub struct GameState {
     player: Player,
     asteroids: Vec<Asteroid>,
     hud: Hud,
+    score: i64,
 }
 
 impl GameState {
-    pub fn new(window_size: &Vector, font72: FontRenderer) -> Self {
+    pub fn new(window_size: &Vector, font72: FontRenderer, font16: FontRenderer) -> Self {
         Self {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
             asteroids: GameState::initialize_asteroids(window_size),
-            hud: Hud::new(font72),
+            hud: Hud::new(font72, font16),
+            score: 0,
         }
     }
 
@@ -67,6 +69,12 @@ impl State for GameState {
                     asteroid.handle_collision();
                     bullet.handle_collision();
 
+                    self.score += match asteroid.size {
+                        Sizes::Large => 50,
+                        Sizes::Medium => 100,
+                        Sizes::Small => 200
+                    };
+
                     // If an asteroid is destroyed, queue a smaller version to be spawned
                     if asteroid.size != Sizes::Small {
                         spawn_queue.push((asteroid.size, asteroid.location));
@@ -98,6 +106,7 @@ impl State for GameState {
 
         // Update Hud
         self.hud.set_lives(self.player.lives);
+        self.hud.set_score(self.score);
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
