@@ -189,7 +189,7 @@ impl Asteroid {
 impl GameObject for Asteroid {
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         if self.alive {
-            gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
+            gfx.stroke_polygon(&self.world_vertices, Color::from_rgba(237, 187, 153, 1.0));
 
             // DEBUG: Collision Circle For Debugging
             // let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);

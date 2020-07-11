@@ -76,12 +76,12 @@ impl Player {
     }
 
     pub fn generate_exhaust(&mut self) {
-        if let Some(head) = self.object_vertices.first() { 
+        if let Some(head) = self.object_vertices.first() {
             let direction = head.normalize();
 
             let exhaust = *head + self.location - direction.multiply(28.0);
 
-            self.exhaust.push_front((exhaust, 3.0));
+            self.exhaust.push_front((exhaust, 4.0));
 
             while self.exhaust.len() > 10 {
                 self.exhaust.pop_back();
@@ -151,7 +151,7 @@ impl Player {
 impl GameObject for Player {
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         if self.is_alive() {
-            gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
+            gfx.stroke_polygon(&self.world_vertices, Color::from_rgba(255, 255, 255, 1.0));
 
             // DEBUG: Collision Circle For Debugging
             // let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
@@ -160,7 +160,7 @@ impl GameObject for Player {
             for (exhaust, size) in self.exhaust.iter().filter(|x| x.1 > 0.1) {
                 let circle = quicksilver::geom::Circle::new(*exhaust + self.translation, *size);
 
-                gfx.stroke_circle(&circle, Color::WHITE);
+                gfx.fill_circle(&circle, Color::from_rgba(127, 179, 213, 1.0));
             }
         }
 
