@@ -134,8 +134,8 @@ impl GameObject for Player {
             gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
 
             // DEBUG: Collision Circle For Debugging
-            let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
-            gfx.stroke_circle(&circle, Color::BLUE);
+            // let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
+            // gfx.stroke_circle(&circle, Color::BLUE);
         }
 
         for bullet in self.bullets.iter_mut().filter(|x| x.alive) {

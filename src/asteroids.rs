@@ -192,8 +192,8 @@ impl GameObject for Asteroid {
             gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
 
             // DEBUG: Collision Circle For Debugging
-            let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
-            gfx.stroke_circle(&circle, Color::RED);
+            // let circle = quicksilver::geom::Circle::new(self.location + self.translation, self.hit_radius);
+            // gfx.stroke_circle(&circle, Color::RED);
         }
 
         Ok(())
