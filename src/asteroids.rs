@@ -162,7 +162,7 @@ impl Asteroid {
 
     pub fn shrink_asteroid(&mut self, size: &Sizes) {
         let object_vertices = Asteroid::get_object_vertices();
-        
+
         // converts verts from obj space to world space and translate world space to screen space
         let object_vertices: Vec<Vector> = object_vertices.iter().map(|x| x.multiply(88.0)).collect();
 
@@ -187,7 +187,7 @@ impl Asteroid {
 }
 
 impl GameObject for Asteroid {
-    fn render(&self, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         if self.alive {
             gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
 

@@ -10,10 +10,11 @@ use crate::math::VectorMath;
 pub struct Hud {
     player_lives: i32,
     object_vertices: Vec<Vector>,
+    font72: FontRenderer,
 }
 
 impl Hud {
-    pub fn new() -> Self {
+    pub fn new(font72: FontRenderer) -> Self {
         let object_vertices = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
 
         let object_vertices = object_vertices.iter()
@@ -23,6 +24,7 @@ impl Hud {
         Self {
             player_lives: 0,
             object_vertices,
+            font72,
         }
     }
 
@@ -36,7 +38,7 @@ impl Hud {
 }
 
 impl GameObject for Hud {
-    fn render(&self, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         let mut offset = 0.0;
         for _ in 0..self.player_lives {
             let top_left = Vector::new(20.0 + offset, 20.0);
@@ -47,6 +49,15 @@ impl GameObject for Hud {
             gfx.fill_polygon(&icon, Color::WHITE);
 
             offset += 20.0;
+        }
+
+        if self.player_lives == 0 {
+            let _ = self.font72.draw(
+                gfx,
+                "Game Over!",
+                Color::WHITE,
+                Vector::new(350.0, 400.0),
+            );
         }
 
         Ok(())

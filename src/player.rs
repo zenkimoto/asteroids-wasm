@@ -129,7 +129,7 @@ impl Player {
 }
 
 impl GameObject for Player {
-    fn render(&self, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         if self.is_alive() {
             gfx.stroke_polygon(&self.world_vertices, Color::WHITE);
 
@@ -138,7 +138,7 @@ impl GameObject for Player {
             gfx.stroke_circle(&circle, Color::BLUE);
         }
 
-        for bullet in self.bullets.iter().filter(|x| x.alive) {
+        for bullet in self.bullets.iter_mut().filter(|x| x.alive) {
             bullet.render(gfx)?;
         }
 

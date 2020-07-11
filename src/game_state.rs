@@ -1,7 +1,7 @@
 use quicksilver::{
     geom::Vector,
     input::Key,
-    graphics::Color,
+    graphics::{Color, FontRenderer},
     Graphics, Input, Result,
 };
 
@@ -22,12 +22,12 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn new(window_size: &Vector) -> Self {
+    pub fn new(window_size: &Vector, font72: FontRenderer) -> Self {
         Self {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
             asteroids: GameState::initialize_asteroids(window_size),
-            hud: Hud::new(),
+            hud: Hud::new(font72),
         }
     }
 

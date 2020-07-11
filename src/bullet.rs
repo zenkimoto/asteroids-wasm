@@ -32,7 +32,7 @@ impl Bullet {
 }
 
 impl GameObject for Bullet {
-    fn render(&self, gfx: &mut Graphics) -> Result<()> {
+    fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
         let circle = Circle::new(self.location, 1.5);
         gfx.fill_circle(&circle, Color::WHITE);
 
