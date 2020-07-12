@@ -110,6 +110,7 @@ impl State for GameState {
         // Update Hud
         self.hud.set_lives(self.player.lives);
         self.hud.set_score(self.score);
+        self.hud.update();
     }
 
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {

@@ -14,12 +14,13 @@ pub struct Hud {
     player_lives: i32,
     score: i64,
     object_vertices: Vec<Vector>,
-    font72: FontRenderer,
+    font48: FontRenderer,
     font16: FontRenderer,
+    alpha: f32,
 }
 
 impl Hud {
-    pub fn new(font72: FontRenderer, font16: FontRenderer) -> Self {
+    pub fn new(font48: FontRenderer, font16: FontRenderer) -> Self {
         let object_vertices = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
 
         let object_vertices = object_vertices.iter()
@@ -30,8 +31,9 @@ impl Hud {
             player_lives: 0,
             score: 0,
             object_vertices,
-            font72,
+            font48,
             font16,
+            alpha: 0.0,
         }
     }
 
@@ -58,6 +60,7 @@ impl GameObject for Hud {
             v!(14.0, 24.0)
         )?;
 
+        // Draw player lives icons
         for i in 0..self.player_lives {
             let top_left = Vector::new(MARGIN + (i as f32) * MARGIN, MARGIN * 2.0 - 2.0);
             let new_loc = top_left;
@@ -65,15 +68,6 @@ impl GameObject for Hud {
             let icon = self.build_ship_icon(new_loc);
 
             gfx.fill_polygon(&icon, Color::WHITE);
-        }
-
-        if self.player_lives == 0 {
-            self.font72.draw(
-                gfx,
-                "Game Over!",
-                Color::WHITE,
-                Vector::new(350.0, 400.0),
-            )?;
         }
 
         // Write out Score Label
@@ -96,7 +90,31 @@ impl GameObject for Hud {
             v!(x, y),
         )?;
 
+        if self.player_lives == 0 {
+            self.font48.draw(
+                gfx,
+                "Game Over!",
+                Color::from_rgba(255, 255, 255, if self.alpha < 0.5 { self.alpha * 2.0 } else { 1.0 }),
+                Vector::new(400.0, 397.0),
+            )?;
+
+            let x = 471.0 - ((score_str.len() as f32) * CHAR_WIDTH / 2.0);
+
+            self.font16.draw(
+                gfx,
+                &format!("YOUR SCORE: {}", self.score),
+                Color::from_rgba(255, 255, 255, self.alpha),
+                v!(x, 435.0)
+            )?;
+        }
+
         Ok(())
+    }
+
+    fn update(&mut self) {
+        if self.player_lives == 0 && self.alpha < 1.0 {
+            self.alpha += 0.025;
+        }
     }
 }
 
