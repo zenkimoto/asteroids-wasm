@@ -50,8 +50,16 @@ impl Hud {
 
 impl GameObject for Hud {
     fn render(&mut self, gfx: &mut Graphics) -> Result<()> {
+        // Write out Lives Label
+        self.font16.draw(
+            gfx,
+            "LIVES",
+            Color::WHITE,
+            v!(14.0, 24.0)
+        )?;
+
         for i in 0..self.player_lives {
-            let top_left = Vector::new(MARGIN + (i as f32) * MARGIN, MARGIN);
+            let top_left = Vector::new(MARGIN + (i as f32) * MARGIN, MARGIN * 2.0 - 2.0);
             let new_loc = top_left;
 
             let icon = self.build_ship_icon(new_loc);
@@ -68,16 +76,24 @@ impl GameObject for Hud {
             )?;
         }
 
+        // Write out Score Label
+        self.font16.draw(
+            gfx,
+            "SCORE",
+            Color::WHITE,
+            v!(965.0, 24.0)
+        )?;
+
         // Right Align Score
         let score_str = &format!("{}", self.score);
         let x = 1024.0 - (score_str.len() as f32) * CHAR_WIDTH - MARGIN;
-        let y = MARGIN;
+        let y = MARGIN * 2.0;
 
         self.font16.draw(
             gfx,
             score_str,
             Color::WHITE,
-            Vector::new(x, y),
+            v!(x, y),
         )?;
 
         Ok(())
