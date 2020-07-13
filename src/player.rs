@@ -22,6 +22,7 @@ pub struct Player {
     pub translation: Vector,
     pub bullets: Vec<Bullet>,
     pub exhaust: VecDeque<(Vector, f32)>,
+    pub explosion: Vec<(Vector, Vector, f32)>,
 }
 
 impl Player {
@@ -44,6 +45,7 @@ impl Player {
             translation,
             bullets: vec![Bullet::new(); NUM_BULLETS],
             exhaust: VecDeque::new(),
+            explosion: vec![],
         }
     }
 
@@ -125,6 +127,12 @@ impl Player {
     }
 
     pub fn handle_collsion(&mut self) {
+        let count = 14;
+        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + 15.0)
+                                   .map(|d| v!(2.0, 0.0).rotate(d))
+                                   .map(|v| (self.location.clone(), v, 5.0))
+                                   .collect();
+
         self.location = Vector::ZERO;
         self.velocity = Vector::ZERO;
         self.lives = if self.lives > 0 { self.lives - 1 } else { 0 }
@@ -164,6 +172,12 @@ impl GameObject for Player {
             }
         }
 
+        for (particle, _, size) in self.explosion.iter().filter(|x| x.2 > 0.05) {
+            let circle = quicksilver::geom::Circle::new(*particle + self.translation, *size);
+
+            gfx.fill_circle(&circle, Color::from_rgba(248, 196, 113, 1.0));
+        }
+
         for bullet in self.bullets.iter_mut().filter(|x| x.alive) {
             bullet.render(gfx)?;
         }
@@ -184,6 +198,11 @@ impl GameObject for Player {
 
         self.bullets.iter_mut().filter(|x| x.alive).for_each(|x| x.location = x.location + x.velocity);
 
-        self.exhaust.iter_mut().for_each(|x| x.1 = x.1 / 1.5);
+        self.exhaust.iter_mut().for_each(|x| x.1 /= 1.5);
+
+        self.explosion.iter_mut().for_each(|x| {
+            x.0 += x.1;
+            x.2 /= 1.2;
+        });
     }
 }
