@@ -130,7 +130,7 @@ impl Player {
         let count = 14;
         self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + 15.0)
                                    .map(|d| v!(2.0, 0.0).rotate(d))
-                                   .map(|v| (self.location.clone(), v, 5.0))
+                                   .map(|v| (self.location.clone(), v, 12.0))
                                    .collect();
 
         self.location = Vector::ZERO;
@@ -202,7 +202,7 @@ impl GameObject for Player {
 
         self.explosion.iter_mut().for_each(|x| {
             x.0 += x.1;
-            x.2 /= 1.2;
+            x.2 /= 1.4;
         });
     }
 }
