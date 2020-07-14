@@ -98,13 +98,20 @@ impl GameObject for Hud {
                 Vector::new(400.0, 397.0),
             )?;
 
-            let x = 471.0 - ((score_str.len() as f32) * CHAR_WIDTH / 2.0);
+            let x = 466.0 - ((score_str.len() as f32) * CHAR_WIDTH / 2.0);
 
             self.font16.draw(
                 gfx,
                 &format!("YOUR SCORE: {}", self.score),
                 Color::from_rgba(255, 255, 255, self.alpha),
                 v!(x, 435.0)
+            )?;
+
+            self.font16.draw(
+                gfx,
+                &format!("Press ENTER To Restart"),
+                Color::from_rgba(255, 255, 255, self.alpha),
+                v!(428.0, 520.0)
             )?;
         }
 
