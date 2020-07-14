@@ -28,6 +28,7 @@ pub struct Asteroid {
     pub object_vertices: Vec<Vector>,
     pub world_vertices: Vec<Vector>,
     pub translation: Vector,
+    pub explosion: Vec<(Vector, Vector, f32)>
 }
 
 impl Asteroid {
@@ -53,6 +54,7 @@ impl Asteroid {
             object_vertices,
             world_vertices,
             translation,
+            explosion: vec![],
         }
     }
 
@@ -140,6 +142,12 @@ impl Asteroid {
 
     pub fn handle_collision(&mut self) {
         self.alive = false;
+
+        let count = rand!(3, 9) as i32;
+        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + rand!(-10, 14))
+                                   .map(|d| v!(2.0, 0.0).rotate(d))
+                                   .map(|v| (self.location.clone(), v, 6.0))
+                                   .collect();
     }
 
     pub fn spawn_asteroid(&mut self, location: &Vector, size: &Sizes) {
@@ -187,6 +195,12 @@ impl GameObject for Asteroid {
             // gfx.stroke_circle(&circle, Color::RED);
         }
 
+        for (particle, _, size) in self.explosion.iter().filter(|x| x.2 > 0.05) {
+            let circle = quicksilver::geom::Circle::new(*particle + self.translation, *size);
+
+            gfx.fill_circle(&circle, Color::from_rgba(248, 196, 113, 1.0));
+        }
+
         Ok(())
     }
 
@@ -203,5 +217,10 @@ impl GameObject for Asteroid {
         self.object_vertices = self.object_vertices.iter()
                                                    .map(|x| x.rotate(self.rotation))
                                                    .collect();
+
+        self.explosion.iter_mut().for_each(|x| {
+            x.0 += x.1;
+            x.2 /= 1.6;
+        });
     }
 }
