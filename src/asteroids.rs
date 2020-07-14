@@ -143,10 +143,16 @@ impl Asteroid {
     pub fn handle_collision(&mut self) {
         self.alive = false;
 
+        let size = match self.size {
+            Sizes::Small => 6.0,
+            Sizes::Medium => 12.0,
+            Sizes::Large => 24.0,
+        };
+
         let count = rand!(3, 9) as i32;
         self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + rand!(-10, 14))
                                    .map(|d| v!(2.0, 0.0).rotate(d))
-                                   .map(|v| (self.location.clone(), v, 6.0))
+                                   .map(|v| (self.location.clone(), v, size))
                                    .collect();
     }
 
