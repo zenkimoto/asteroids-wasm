@@ -5,6 +5,7 @@ use quicksilver::{
     geom::Vector,
     Graphics, Result,
 };
+use rand::Rng;
 
 use crate::math::VectorMath;
 use crate::game_object::GameObject;
@@ -127,8 +128,8 @@ impl Player {
     }
 
     pub fn handle_collsion(&mut self) {
-        let count = 14;
-        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + 15.0)
+        let count = 2 * (rand!(5, 10) as i32) - 1;
+        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + rand!(-10, 14))
                                    .map(|d| v!(2.0, 0.0).rotate(d))
                                    .map(|v| (self.location.clone(), v, 12.0))
                                    .collect();
