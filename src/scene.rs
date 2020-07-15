@@ -3,7 +3,7 @@ use quicksilver::{
     Graphics, Input, Result,
 };
 
-pub trait State {
+pub trait Scene {
     fn update(&mut self, input: &mut Input);
     fn render(&mut self, gfx: &mut Graphics) -> Result<()>;
 

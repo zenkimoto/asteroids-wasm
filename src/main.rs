@@ -1,13 +1,13 @@
 #[macro_use] mod macros;
 mod math;
 mod game_object;
-mod state;
+mod scene;
 mod bullet;
 mod player;
 mod asteroids;
 mod hud;
 mod star_field;
-mod game_state;
+mod game_scene;
 
 use quicksilver::{
     input::Event,
@@ -17,8 +17,8 @@ use quicksilver::{
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
-use crate::state::State;
-use crate::game_state::GameState;
+use scene::Scene;
+use game_scene::GameScene;
 
 fn main() {
     run(
@@ -30,8 +30,8 @@ fn main() {
     );
 }
 
-enum StateType {
-    Asteroids(GameState),
+enum SceneType {
+    Asteroids(GameScene),
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
@@ -51,24 +51,24 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
     let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
-    let mut states = initialize_game_states(&window_size, font48, font16);
+    let mut scenes = initialize_game_scenes(&window_size, font48, font16);
 
     loop {
-        let state = get_current_game_state(&mut states);
+        let scene = get_current_game_scene(&mut scenes);
 
-        handle_input_events(&mut input, state).await;
+        handle_input_events(&mut input, scene).await;
 
-        update_game_state(&mut update_timer, &mut input, state);
+        update_game_scene(&mut update_timer, &mut input, scene);
 
-        render_game_state(&mut draw_timer, &window, &mut gfx, state)?;
+        render_game_scene(&mut draw_timer, &window, &mut gfx, scene)?;
     }
 }
 
-fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
-    debug_assert!(states.len() > 0);
+fn get_current_game_scene(scenes: &mut Vec<SceneType>) -> &mut dyn Scene {
+    debug_assert!(scenes.len() > 0);
 
-    match states.last_mut() {
-        Some(StateType::Asteroids(state)) => state,
+    match scenes.last_mut() {
+        Some(SceneType::Asteroids(scene)) => scene,
         _ => {
             // This should not happen.  There should always be at least
             // one state in the stack so the game knows what to render.
@@ -77,13 +77,13 @@ fn get_current_game_state(states: &mut Vec<StateType>) -> &mut dyn State {
     }
 }
 
-fn initialize_game_states(window_size: &Vector, font48: FontRenderer, font16: FontRenderer) -> Vec<StateType> {
+fn initialize_game_scenes(window_size: &Vector, font48: FontRenderer, font16: FontRenderer) -> Vec<SceneType> {
     vec![
-        StateType::Asteroids(GameState::new(window_size, font48, font16))
+        SceneType::Asteroids(GameScene::new(window_size, font48, font16))
     ]
 }
 
-async fn handle_input_events(input: &mut Input, state: &mut dyn State) {
+async fn handle_input_events(input: &mut Input, state: &mut dyn Scene) {
     while let Some(e) = input.next_event().await {
         match e {
             Event::KeyboardInput(key) if key.is_down() == false => state.key_up(key.key()),
@@ -92,7 +92,7 @@ async fn handle_input_events(input: &mut Input, state: &mut dyn State) {
     }
 }
 
-fn update_game_state(update_timer: &mut Timer, input: &mut Input, state: &mut dyn State) {
+fn update_game_scene(update_timer: &mut Timer, input: &mut Input, state: &mut dyn Scene) {
     // We use a while loop rather than an if so that we can try to catch up in the event of having a slow down.
     while update_timer.tick() {
         if input.key_down(Key::Left) {
@@ -115,7 +115,7 @@ fn update_game_state(update_timer: &mut Timer, input: &mut Input, state: &mut dy
     }
 }
 
-fn render_game_state(draw_timer: &mut Timer, window: &Window, gfx: &mut Graphics, state: &mut dyn State) -> Result<()> {
+fn render_game_scene(draw_timer: &mut Timer, window: &Window, gfx: &mut Graphics, state: &mut dyn Scene) -> Result<()> {
     if draw_timer.exhaust().is_some() {
         state.render(gfx)?;
         gfx.present(window)?;

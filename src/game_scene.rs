@@ -5,7 +5,7 @@ use quicksilver::{
     Graphics, Input, Result,
 };
 
-use crate::state::State;
+use crate::scene::Scene;
 use crate::player::Player;
 use crate::asteroids::{Asteroid, Sizes};
 use crate::hud::Hud;
@@ -15,7 +15,7 @@ use crate::star_field::StarField;
 const NUM_ASTEROIDS: u8 = 27;
 const NUM_SPAWN_ASTEROIDS: i32 = 3;
 
-pub struct GameState {
+pub struct GameScene {
     window_size: Vector,
     player: Player,
     asteroids: Vec<Asteroid>,
@@ -24,12 +24,12 @@ pub struct GameState {
     star_field: StarField,
 }
 
-impl GameState {
+impl GameScene {
     pub fn new(window_size: &Vector, font72: FontRenderer, font16: FontRenderer) -> Self {
-        Self {
+        GameScene {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
-            asteroids: GameState::initialize_asteroids(window_size),
+            asteroids: GameScene::initialize_asteroids(window_size),
             hud: Hud::new(font72, font16),
             score: 0,
             star_field: StarField::new(window_size)
@@ -41,7 +41,7 @@ impl GameState {
     }
 }
 
-impl State for GameState {
+impl Scene for GameScene {
     fn update(&mut self, _input: &mut Input) {
         let mut spawn_queue: Vec<(Sizes, Vector)> = vec![];
 
@@ -52,7 +52,7 @@ impl State for GameState {
 
         // If all asteroids are destroyed, re-initialize level
         if self.asteroids.iter().all(|a| a.is_dead()) {
-            self.asteroids = GameState::initialize_asteroids(&self.window_size);
+            self.asteroids = GameScene::initialize_asteroids(&self.window_size);
         }
 
         // Check for Collisions
