@@ -17,7 +17,7 @@ use quicksilver::{
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
-use scene::Scene;
+use scene::{Scene, Transition};
 use game_scene::GameScene;
 
 fn main() {
@@ -45,12 +45,12 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
 
     // Load font
     let ttf = VectorFont::load("ShareTechMono-Regular.ttf").await?;
-    let font48 = ttf.to_renderer(&gfx, 48.0)?;
-    let font16 = ttf.to_renderer(&gfx, 16.0)?;
 
     let mut update_timer = Timer::time_per_second(30.0);
     let mut draw_timer = Timer::time_per_second(60.0);
 
+    let font48 = ttf.to_renderer(&gfx, 48.0)?;
+    let font16 = ttf.to_renderer(&gfx, 16.0)?;
     let mut scenes = initialize_game_scenes(&window_size, font48, font16);
 
     loop {
@@ -61,6 +61,12 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> 
         update_game_scene(&mut update_timer, &mut input, scene);
 
         render_game_scene(&mut draw_timer, &window, &mut gfx, scene)?;
+
+        if scene.should_transition() {
+            let font48 = ttf.to_renderer(&gfx, 48.0)?;
+            let font16 = ttf.to_renderer(&gfx, 16.0)?;
+            handle_scene_transition(scene.get_transition(), &mut scenes, &window_size, font48, font16);
+        }
     }
 }
 
@@ -111,6 +117,10 @@ fn update_game_scene(update_timer: &mut Timer, input: &mut Input, state: &mut dy
             state.key_down(Key::Space);
         }
 
+        if input.key_down(Key::Return) {
+            state.key_down(Key::Return);
+        }
+
         state.update(input);
     }
 }
@@ -122,4 +132,14 @@ fn render_game_scene(draw_timer: &mut Timer, window: &Window, gfx: &mut Graphics
     }
 
     Ok(())
+}
+
+fn handle_scene_transition(transition: Option<Transition>, scenes: &mut Vec<SceneType>, window_size: &Vector, font48: FontRenderer, font16: FontRenderer) {
+    match transition {
+        Some(Transition::Reset) => {
+            scenes.pop();
+            scenes.push(SceneType::Asteroids(GameScene::new(window_size, font48, font16)))
+         },
+        None => { }
+    }
 }

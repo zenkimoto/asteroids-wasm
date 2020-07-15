@@ -5,7 +5,7 @@ use quicksilver::{
     Graphics, Input, Result,
 };
 
-use crate::scene::Scene;
+use crate::scene::{Scene, Transition};
 use crate::player::Player;
 use crate::asteroids::{Asteroid, Sizes};
 use crate::hud::Hud;
@@ -22,6 +22,7 @@ pub struct GameScene {
     hud: Hud,
     score: i64,
     star_field: StarField,
+    transition: Option<Transition>
 }
 
 impl GameScene {
@@ -32,7 +33,8 @@ impl GameScene {
             asteroids: GameScene::initialize_asteroids(window_size),
             hud: Hud::new(font72, font16),
             score: 0,
-            star_field: StarField::new(window_size)
+            star_field: StarField::new(window_size),
+            transition: None,
         }
     }
 
@@ -139,6 +141,7 @@ impl Scene for GameScene {
             Key::Left => self.player.rotate(-4.0),
             Key::Right => self.player.rotate(4.0),
             Key::Up => self.player.apply_thrust(),
+            Key::Return if !self.player.is_alive() => self.transition = Some(Transition::Reset),
             _ => { }
         }
     }
@@ -147,5 +150,17 @@ impl Scene for GameScene {
         if key == Key::Space {
             self.player.shoot_bullet();
         }
+    }
+
+    fn should_transition(&self) -> bool {
+        if let Some(_) = &self.transition {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn get_transition(&self) -> Option<Transition> {
+        self.transition.clone()
     }
 }
