@@ -5,7 +5,7 @@ use quicksilver::{
 };
 
 use super::game_object::GameObject;
-use crate::math::VectorMath;
+use super::util::math::VectorMath;
 
 const MARGIN: f32 = 20.0;
 const CHAR_WIDTH: f32 = 8.0;

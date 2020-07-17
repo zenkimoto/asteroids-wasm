@@ -7,7 +7,7 @@ use quicksilver::{
 };
 use rand::Rng;
 
-use crate::math::VectorMath;
+use super::util::math::VectorMath;
 use super::game_object::GameObject;
 use super::bullet::Bullet;
 

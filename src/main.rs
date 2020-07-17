@@ -1,5 +1,5 @@
 #[macro_use] mod macros;
-mod math;
+mod util;
 mod scenes;
 
 use quicksilver::{
