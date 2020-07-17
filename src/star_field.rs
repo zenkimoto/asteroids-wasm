@@ -19,9 +19,9 @@ impl StarField {
     }
 
     fn generate_stars(window_size: &Vector) -> Vec<Vector> {
-        let num_stars = rand!(45, 90) as i32;
+        let num_stars = rand!(45, 90);
 
-        (0..num_stars).map(|_| v!(rand!(0.0, window_size.x), rand!(0.0, window_size.y))).collect()
+        (0..num_stars).map(|_| v!(randf!(0.0, window_size.x), randf!(0.0, window_size.y))).collect()
     }
 }
 

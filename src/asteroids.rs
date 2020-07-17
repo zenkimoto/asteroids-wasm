@@ -61,13 +61,13 @@ impl Asteroid {
     fn generate_vertices() -> Vec<Vector> {
         // Randomly generate asteroid
         let mut vertices = vec![];
-        let num_vertices = rand!(8, 21);
+        let num_vertices = randf!(8, 21);
         let degree_interval = 360.0 / num_vertices;
-        let is_smooth = rand!(0, 3) as i32;  // 1 in 3 chance the asteroid is smooth (more round)
+        let is_smooth = rand!(0, 3);  // 1 in 3 chance the asteroid is smooth (more round)
 
         for i in 0..(num_vertices as i32) {
             let deg = degree_interval * i as f32;
-            let mag = if is_smooth == 0 { rand!(0.3, 0.4) } else { rand!(0.2, 0.45) };
+            let mag = if is_smooth == 0 { randf!(0.3, 0.4) } else { randf!(0.2, 0.45) };
 
             let v = v!(mag, 0.0).rotate(deg);
 
@@ -78,25 +78,25 @@ impl Asteroid {
     }
 
     fn get_random_location(window_size: &Vector) -> Vector {
-        let lx = rand!() % window_size.x / 2.0;
-        let ly = rand!() % window_size.y / 2.0;
+        let lx = randf!() % window_size.x / 2.0;
+        let ly = randf!() % window_size.y / 2.0;
 
         v!(lx, ly)
     }
 
     fn get_random_sign() -> f32 {
-        2.0 * rand!(2) - 1.0
+        2.0 * randf!(2) - 1.0
     }
 
     fn get_random_velocity() -> Vector {
-        let vx = rand!(500) / 1000.0 * Asteroid::get_random_sign();
-        let vy = rand!(500) / 1000.0 * Asteroid::get_random_sign();
+        let vx = randf!(500) / 1000.0 * Asteroid::get_random_sign();
+        let vy = randf!(500) / 1000.0 * Asteroid::get_random_sign();
 
         v!(vx, vy)
     }
 
     fn get_random_degrees() -> f32 {
-        Asteroid::get_random_sign() * (rand!(100) + 1000.0) / 1000.0
+        Asteroid::get_random_sign() * (randf!(100) + 1000.0) / 1000.0
     }
 
     pub fn is_dead(&self) -> bool {
@@ -149,8 +149,9 @@ impl Asteroid {
             Sizes::Large => 24.0,
         };
 
-        let count = rand!(3, 9) as i32;
-        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32) + rand!(-10, 14))
+        let count = rand!(3, 9);
+        self.explosion = (0..count).map(|d| (d as f32) * (360.0 / count as f32))
+                                   .map(|d| d + randf!(-10, 14))
                                    .map(|d| v!(2.0, 0.0).rotate(d))
                                    .map(|v| (self.location.clone(), v, size))
                                    .collect();

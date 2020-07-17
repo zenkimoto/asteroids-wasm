@@ -21,7 +21,7 @@ pub struct Hud {
 
 impl Hud {
     pub fn new(font48: FontRenderer, font16: FontRenderer) -> Self {
-        let object_vertices = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
+        let object_vertices: Vec<Vector> = vec![v!(0.0, 1.5), v!(-1.0, -1.0), v!(1.0, -1.0), v!(0.0, 1.5)];
 
         let object_vertices = object_vertices.iter()
                                              .map(|x| x.multiply(6.0))
