@@ -26,12 +26,12 @@ pub struct GameScene {
 }
 
 impl GameScene {
-    pub fn new(window_size: &Vector, font72: FontRenderer, font16: FontRenderer) -> Self {
+    pub fn new(window_size: &Vector, font48: FontRenderer, font16: FontRenderer) -> Self {
         GameScene {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
             asteroids: GameScene::initialize_asteroids(window_size),
-            hud: Hud::new(font72, font16),
+            hud: Hud::new(font48, font16),
             score: 0,
             star_field: StarField::new(window_size),
             transition: None,
