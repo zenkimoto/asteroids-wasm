@@ -4,7 +4,7 @@ use quicksilver::{
     Result
 };
 
-use crate::game_object::GameObject;
+use super::game_object::GameObject;
 use crate::math::VectorMath;
 
 const MARGIN: f32 = 20.0;

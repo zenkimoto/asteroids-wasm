@@ -5,17 +5,17 @@ use quicksilver::{
     Graphics, Input, Result,
 };
 
-use crate::scene::{Scene, Transition};
-use crate::player::Player;
-use crate::asteroids::{Asteroid, Sizes};
-use crate::hud::Hud;
-use crate::game_object::GameObject;
-use crate::star_field::StarField;
+use super::scene::{Scene, Transition};
+use super::game_objects::player::Player;
+use super::game_objects::asteroids::{Asteroid, Sizes};
+use super::game_objects::hud::Hud;
+use super::game_objects::game_object::GameObject;
+use super::game_objects::star_field::StarField;
 
 const NUM_ASTEROIDS: u8 = 27;
 const NUM_SPAWN_ASTEROIDS: i32 = 3;
 
-pub struct GameScene {
+pub struct AsteroidsScene {
     window_size: Vector,
     player: Player,
     asteroids: Vec<Asteroid>,
@@ -25,12 +25,12 @@ pub struct GameScene {
     transition: Option<Transition>
 }
 
-impl GameScene {
+impl AsteroidsScene {
     pub fn new(window_size: &Vector, font48: FontRenderer, font16: FontRenderer) -> Self {
-        GameScene {
+        AsteroidsScene {
             window_size: window_size.clone(),
             player: Player::new(&window_size),
-            asteroids: GameScene::initialize_asteroids(window_size),
+            asteroids: AsteroidsScene::initialize_asteroids(window_size),
             hud: Hud::new(font48, font16),
             score: 0,
             star_field: StarField::new(window_size),
@@ -43,7 +43,7 @@ impl GameScene {
     }
 }
 
-impl Scene for GameScene {
+impl Scene for AsteroidsScene {
     fn update(&mut self, _input: &mut Input) {
         let mut spawn_queue: Vec<(Sizes, Vector)> = vec![];
 
@@ -54,7 +54,7 @@ impl Scene for GameScene {
 
         // If all asteroids are destroyed, re-initialize level
         if self.asteroids.iter().all(|a| a.is_dead()) {
-            self.asteroids = GameScene::initialize_asteroids(&self.window_size);
+            self.asteroids = AsteroidsScene::initialize_asteroids(&self.window_size);
         }
 
         // Check for Collisions

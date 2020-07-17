@@ -8,8 +8,8 @@ use quicksilver::{
 use rand::Rng;
 
 use crate::math::VectorMath;
-use crate::game_object::GameObject;
-use crate::bullet::Bullet;
+use super::game_object::GameObject;
+use super::bullet::Bullet;
 
 const NUM_BULLETS: usize = 20;
 

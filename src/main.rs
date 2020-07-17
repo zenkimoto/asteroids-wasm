@@ -1,13 +1,6 @@
 #[macro_use] mod macros;
 mod math;
-mod game_object;
-mod scene;
-mod bullet;
-mod player;
-mod asteroids;
-mod hud;
-mod star_field;
-mod game_scene;
+mod scenes;
 
 use quicksilver::{
     input::Event,
@@ -17,8 +10,8 @@ use quicksilver::{
     run, Graphics, Input, Result, Settings, Timer, Window,
 };
 
-use scene::{Scene, Transition};
-use game_scene::GameScene;
+use scenes::scene::{Scene, Transition};
+use scenes::asteroids_scene::AsteroidsScene;
 
 fn main() {
     run(
@@ -31,7 +24,7 @@ fn main() {
 }
 
 enum SceneType {
-    Asteroids(GameScene),
+    Asteroids(AsteroidsScene),
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
@@ -85,7 +78,7 @@ fn get_current_game_scene(scenes: &mut Vec<SceneType>) -> &mut dyn Scene {
 
 fn initialize_game_scenes(window_size: &Vector, font48: FontRenderer, font16: FontRenderer) -> Vec<SceneType> {
     vec![
-        SceneType::Asteroids(GameScene::new(window_size, font48, font16))
+        SceneType::Asteroids(AsteroidsScene::new(window_size, font48, font16))
     ]
 }
 
@@ -138,7 +131,7 @@ fn handle_scene_transition(transition: Option<Transition>, scenes: &mut Vec<Scen
     match transition {
         Some(Transition::Reset) => {
             scenes.pop();
-            scenes.push(SceneType::Asteroids(GameScene::new(window_size, font48, font16)))
+            scenes.push(SceneType::Asteroids(AsteroidsScene::new(window_size, font48, font16)))
          },
         None => { }
     }

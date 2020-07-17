@@ -6,7 +6,7 @@ use quicksilver::{
 use rand::Rng;
 
 use crate::math::VectorMath;
-use crate::game_object::GameObject;
+use super::game_object::GameObject;
 
 const HIT_RADIUS: f32 = 35.0;
 
