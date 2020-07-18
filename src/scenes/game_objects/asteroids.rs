@@ -7,6 +7,9 @@ use rand::Rng;
 
 use super::util::math::VectorMath;
 use super::game_object::GameObject;
+use crate::randf;
+use crate::rand;
+use crate::v;
 
 const HIT_RADIUS: f32 = 35.0;
 

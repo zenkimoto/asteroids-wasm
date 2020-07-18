@@ -1,5 +1,6 @@
 use core::f32::consts::PI;
 use quicksilver::geom::Vector;
+use crate::v;
 
 pub trait VectorMath {
     fn multiply(&self, rhs: f32) -> Vector;

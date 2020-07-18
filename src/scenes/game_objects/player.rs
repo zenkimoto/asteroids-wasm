@@ -10,6 +10,9 @@ use rand::Rng;
 use super::util::math::VectorMath;
 use super::game_object::GameObject;
 use super::bullet::Bullet;
+use crate::randf;
+use crate::rand;
+use crate::v;
 
 const NUM_BULLETS: usize = 20;
 

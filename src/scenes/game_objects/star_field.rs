@@ -6,6 +6,9 @@ use quicksilver::{
 use rand::Rng;
 
 use super::game_object::GameObject;
+use crate::randf;
+use crate::rand;
+use crate::v;
 
 pub struct StarField {
     stars: Vec<Vector>,
